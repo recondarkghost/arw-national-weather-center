@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ARW Severe Weather Outlook</title>
+
+<link rel="stylesheet"
+ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+html,body,#map{
+    width:100%;
+    height:100%;
+    margin:0;
+    background:#07131a;
+    font-family:Arial,sans-serif;
+}
+#map{min-height:420px}
+
+.status{
+    position:absolute;
+    z-index:1000;
+    left:10px;
+    right:10px;
+    top:10px;
+    padding:9px 12px;
+    color:#fff;
+    background:rgba(4,15,22,.90);
+    border:1px solid #24e5d2;
+    border-radius:4px;
+    font-size:13px;
+}
+
+.legend{
+    background:rgba(4,15,22,.94);
+    color:white;
+    padding:10px;
+    border:1px solid #24e5d2;
+    line-height:19px;
+    font-size:12px;
+}
+
+.legend i{
+    display:inline-block;
+    width:18px;
+    height:12px;
+    margin-right:6px;
+    vertical-align:middle;
+}
+</style>
+<style id="arw-compact-spc-style">
+.status{
+    left:48px !important;
+    right:5px !important;
+    top:5px !important;
+    padding:5px 7px !important;
+    font-size:10px !important;
+    line-height:1.2 !important;
+    max-height:42px !important;
+    overflow:auto !important;
+}
+.legend{
+    font-size:9px !important;
+    line-height:14px !important;
+    padding:5px !important;
+}
+.legend i{
+    width:13px !important;
+    height:8px !important;
+}
+.leaflet-control-attribution{
+    font-size:7px !important;
+}
+</style>
+</head>
+
+<body>
+<div id="status" class="status">Loading live NOAA/SPC outlookâ€¦</div>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+const parameters = new URLSearchParams(location.search);
+const day = Number(parameters.get("day") || 1);
+
+const layers = {
+    1: 1,
+    2: 9,
+    3: 17
+};
+
+const officialPages = {
+    1: "https://www.spc.noaa.gov/products/outlook/day1otlk.html",
+    2: "https://www.spc.noaa.gov/products/outlook/day2otlk.html",
+    3: "https://www.spc.noaa.gov/products/outlook/day3otlk.html"
+};
+
+const map = L.map("map", {
+    zoomControl: true,
+    attributionControl: true
+}).fitBounds([[23,-127],[51,-66]]);
+
+L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    {
+        maxZoom: 10,
+        attribution: "Map Â© OpenStreetMap | Outlook data NOAA/SPC"
+    }
+).addTo(map);
+
+L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+    {
+        maxZoom:10,
+        attribution:""
+    }
+).addTo(map);
+
+const legend = L.control({position:"bottomright"});
+
+legend.onAdd = function(){
+    const box = L.DomUtil.create("div","legend");
+    box.innerHTML =
+        "<strong>SPC Risk Categories</strong><br>" +
+        '<i style="background:#C1E9C1"></i>Thunderstorms<br>' +
+        '<i style="background:#66A366"></i>Marginal<br>' +
+        '<i style="background:#FFE066"></i>Slight<br>' +
+        '<i style="background:#FFA366"></i>Enhanced<br>' +
+        '<i style="background:#FF6666"></i>Moderate<br>' +
+        '<i style="background:#FF66FF"></i>High';
+    return box;
+};
+
+legend.addTo(map);
+
+function formatSPCTime(value){
+    if(!value || value.length < 12) return "Not provided";
+
+    const year = value.slice(0,4);
+    const month = value.slice(4,6);
+    const date = value.slice(6,8);
+    const hour = value.slice(8,10);
+    const minute = value.slice(10,12);
+
+    const utc = new Date(
+        Date.UTC(
+            Number(year),
+            Number(month)-1,
+            Number(date),
+            Number(hour),
+            Number(minute)
+        )
+    );
+
+    return utc.toLocaleString("en-US",{
+        timeZone:"America/New_York",
+        month:"short",
+        day:"numeric",
+        year:"numeric",
+        hour:"numeric",
+        minute:"2-digit",
+        timeZoneName:"short"
+    });
+}
+
+const service =
+    "https://mapservices.weather.noaa.gov/vector/rest/services/" +
+    "outlooks/SPC_wx_outlks/MapServer/" +
+    layers[day] +
+    "/query?where=1%3D1&outFields=*&returnGeometry=true&f=geojson";
+
+fetch(service)
+.then(response=>{
+    if(!response.ok) throw new Error("NOAA service error");
+    return response.json();
+})
+.then(data=>{
+    if(!data.features || !data.features.length){
+        throw new Error("No current outlook polygons returned");
+    }
+
+    data.features.sort((a,b)=>{
+        return Number(a.properties.dn)-Number(b.properties.dn);
+    });
+
+    const outlook = L.geoJSON(data,{
+        style(feature){
+            return {
+                color:feature.properties.stroke || "#00ffff",
+                fillColor:feature.properties.fill || "#00ffff",
+                weight:2,
+                opacity:1,
+                fillOpacity:.50
+            };
+        },
+
+        onEachFeature(feature,layer){
+            const properties = feature.properties || {};
+
+            layer.bindPopup(
+                "<strong>" +
+                (properties.label2 || properties.label || "SPC Outlook") +
+                "</strong><br>" +
+                "Issued: " + formatSPCTime(properties.issue) + "<br>" +
+                "Valid: " + formatSPCTime(properties.valid) + "<br>" +
+                "Expires: " + formatSPCTime(properties.expire)
+            );
+        }
+    }).addTo(map);
+
+    const first = data.features[0].properties || {};
+
+    document.getElementById("status").innerHTML =
+        "<strong>LIVE NOAA/SPC DAY " + day + " OUTLOOK</strong><br>" +
+        "Issued: " + formatSPCTime(first.issue) +
+        " | Valid: " + formatSPCTime(first.valid) +
+        ' | <a style="color:#57e8ff" target="_blank" href="' +
+        officialPages[day] + '">Official SPC product</a>';
+})
+.catch(error=>{
+    document.getElementById("status").innerHTML =
+        "<strong>NOAA/SPC connection temporarily unavailable.</strong> " +
+        '<a style="color:#57e8ff" target="_blank" href="' +
+        officialPages[day] + '">Open the official outlook</a>';
+});
+</script>
+</body>
+</html>

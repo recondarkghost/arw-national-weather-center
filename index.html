@@ -1314,108 +1314,67 @@ setInterval(updateClock,1000);
 setInterval(refreshFeeds,300000);
 </script>
 
-<script id="arw-final-spc-fix">
-(function () {
-    const maps = [
+
+<script id="arw-spc-direct">
+(function(){
+    const outlooks = [
         {
-            words: ["severe", "today"],
-            url: "https://www.arcgis.com/apps/Embed/index.html?webmap=18cfbd1a917145e1be2bcf484c72568f&extent=-130,20,-60,55&zoom=true&scale=true&disable_scroll=true&theme=dark",
-            label: "Official SPC Severe Weather Outlook Today"
+            title:"Today's Severe Weather Outlook",
+            page:"spc-outlook.html?v=4&day=1"
         },
         {
-            words: ["severe", "tomorrow"],
-            url: "https://www.arcgis.com/apps/Embed/index.html?webmap=3bb765e82d344552afce51a73eca25b0&extent=-130,20,-60,55&zoom=true&scale=true&disable_scroll=true&theme=dark",
-            label: "Official SPC Severe Weather Outlook Tomorrow"
+            title:"Tomorrow's Severe Weather Outlook",
+            page:"spc-outlook.html?v=4&day=2"
         },
         {
-            words: ["severe", "day 3"],
-            url: "https://www.arcgis.com/apps/Embed/index.html?webmap=35d2b80a54c144b3ad4c8c7a08609f08&extent=-130,20,-60,55&zoom=true&scale=true&disable_scroll=true&theme=dark",
-            label: "Official SPC Severe Weather Outlook Day 3"
+            title:"Day 3 Severe Weather Outlook",
+            page:"spc-outlook.html?v=4&day=3"
         }
     ];
 
-    function findCard(words) {
-        const elements = Array.from(
-            document.querySelectorAll("article,section,div")
-        );
+    function install(){
+        document.querySelectorAll(".card").forEach(card=>{
+            const heading=card.querySelector("h2");
+            if(!heading) return;
 
-        const matches = elements.filter(function (element) {
-            const text = (element.innerText || "").toLowerCase();
-            return words.every(function (word) {
-                return text.includes(word);
-            }) && (
-                text.includes("official source") ||
-                text.includes("temporarily unavailable")
+            const outlook=outlooks.find(item=>
+                item.title===heading.textContent.trim()
             );
+
+            if(!outlook) return;
+
+            const media=card.querySelector(".media");
+            if(!media) return;
+
+            if(media.dataset.spcDirect!=="yes"){
+                media.innerHTML="";
+
+                const frame=document.createElement("iframe");
+                frame.src=outlook.page;
+                frame.title=outlook.title;
+                frame.loading="eager";
+                frame.style.width="100%";
+                frame.style.height="440px";
+                frame.style.border="0";
+                frame.style.display="block";
+
+                media.appendChild(frame);
+                media.dataset.spcDirect="yes";
+            }
+
+            const fullScreen=card.querySelector(".actions button");
+
+            if(fullScreen){
+                fullScreen.onclick=function(){
+                    window.open(outlook.page,"_blank");
+                };
+            }
         });
-
-        matches.sort(function (a, b) {
-            return a.innerText.length - b.innerText.length;
-        });
-
-        return matches[0];
     }
 
-    function installMap(item) {
-        const card = findCard(item.words);
-        if (!card || card.dataset.arwLiveMap === "installed") return;
-
-        let media = card.querySelector(".media");
-
-        if (!media) {
-            const unavailable = Array.from(card.querySelectorAll("div"))
-                .find(function (element) {
-                    return (element.innerText || "")
-                        .toLowerCase()
-                        .includes("temporarily unavailable");
-                });
-
-            if (unavailable) media = unavailable;
-        }
-
-        if (!media) {
-            const image = card.querySelector("img");
-            if (image) media = image.parentElement;
-        }
-
-        if (!media) return;
-
-        media.innerHTML = "";
-
-        const frame = document.createElement("iframe");
-        frame.src = item.url;
-        frame.title = item.label;
-        frame.loading = "eager";
-        frame.allowFullscreen = true;
-        frame.style.width = "100%";
-        frame.style.height = "420px";
-        frame.style.minHeight = "420px";
-        frame.style.border = "0";
-        frame.style.display = "block";
-        frame.style.background = "#101820";
-
-        media.appendChild(frame);
-        card.dataset.arwLiveMap = "installed";
-    }
-
-    function repair() {
-        maps.forEach(installMap);
-    }
-
-    repair();
-    document.addEventListener("DOMContentLoaded", repair);
-    window.addEventListener("load", repair);
-
-    const observer = new MutationObserver(repair);
-    observer.observe(document.documentElement, {
-        childList: true,
-        subtree: true
-    });
-
-    const timer = setInterval(repair, 500);
-    setTimeout(function () {
-        clearInterval(timer);
-    }, 30000);
+    install();
+    window.addEventListener("load",install);
+    setTimeout(install,500);
 })();
 </script>
 </body>
