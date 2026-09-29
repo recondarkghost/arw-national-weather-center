@@ -334,6 +334,184 @@ dialog::backdrop{
   .alertbar{align-items:flex-start;flex-wrap:wrap}
   .lessons{grid-template-columns:1fr}
 }
+
+/* ARW_RELEASE_1 */
+.release-one{
+  padding:18px 3% 30px;
+}
+
+.operations-grid{
+  display:grid;
+  grid-template-columns:1.15fr 1fr;
+  gap:15px;
+}
+
+.operations-panel{
+  background:linear-gradient(180deg,#0b2135,#07131f);
+  border:1px solid var(--line);
+  box-shadow:0 14px 35px rgba(0,0,0,.38);
+  padding:18px;
+}
+
+.operations-panel h2{
+  margin:5px 0 8px;
+  font-size:23px;
+}
+
+.operations-description{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.45;
+  margin:0 0 16px;
+}
+
+.location-form{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+}
+
+.location-form input{
+  width:100%;
+  border:1px solid #2b5878;
+  background:#030b14;
+  color:white;
+  padding:12px;
+  font-size:16px;
+}
+
+.location-form input:focus{
+  outline:2px solid var(--cyan);
+  outline-offset:1px;
+}
+
+.location-result{
+  margin-top:14px;
+  min-height:115px;
+  border:1px solid #173c57;
+  background:#040d17;
+  padding:14px;
+}
+
+.location-result h3{
+  margin:0 0 10px;
+}
+
+.location-current{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+
+.weather-value{
+  background:#0a1d2d;
+  border:1px solid #173c57;
+  padding:10px;
+}
+
+.weather-value small{
+  display:block;
+  color:var(--muted);
+  margin-bottom:5px;
+}
+
+.weather-value strong{
+  font-size:18px;
+}
+
+.forecast-row{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:7px;
+  margin-top:10px;
+}
+
+.forecast-day{
+  background:#091827;
+  border-top:2px solid var(--cyan);
+  padding:8px;
+  font-size:12px;
+  text-align:center;
+}
+
+.forecast-day strong,
+.forecast-day span{
+  display:block;
+  margin-top:4px;
+}
+
+.saved-locations{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+
+.saved-locations button{
+  padding:6px 9px;
+  font-size:12px;
+}
+
+.threat-board{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+  margin-top:14px;
+}
+
+.threat-item{
+  border:1px solid #244762;
+  background:#071420;
+  padding:11px;
+}
+
+.threat-item span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:6px;
+}
+
+.threat-item strong{
+  font-size:14px;
+}
+
+.level-low{color:var(--green)}
+.level-elevated{color:#ffce4b}
+.level-high{color:#ff8a34}
+.level-extreme{color:var(--red)}
+
+.threat-note{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+  margin:13px 0 0;
+}
+
+.emergency-banner{
+  display:none;
+  padding:13px 3%;
+  background:#a90024;
+  color:white;
+  border-bottom:2px solid #ff758e;
+  font-weight:bold;
+  line-height:1.45;
+}
+
+.emergency-banner.active{
+  display:block;
+}
+
+@media(max-width:900px){
+  .operations-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:600px){
+  .release-one{padding:12px 10px 24px}
+  .location-current{grid-template-columns:repeat(2,1fr)}
+  .forecast-row{grid-template-columns:repeat(2,1fr)}
+  .threat-board{grid-template-columns:repeat(2,1fr)}
+}
 </style>
 </head>
 
@@ -351,14 +529,14 @@ dialog::backdrop{
   </div>
 
   <div class="status">
-    <div class="live">● LIVE MONITORING</div>
-    <div id="clock">Loading Eastern Time…</div>
+    <div class="live">â— LIVE MONITORING</div>
+    <div id="clock">Loading Eastern Timeâ€¦</div>
   </div>
 </header>
 
 <section class="alertbar">
-  <strong>⚠ NATIONAL ALERTS</strong>
-  <span id="alertText">Connecting to the National Weather Service…</span>
+  <strong>âš  NATIONAL ALERTS</strong>
+  <span id="alertText">Connecting to the National Weather Serviceâ€¦</span>
   <button onclick="refreshFeeds()">Refresh feeds</button>
 </section>
 
@@ -371,6 +549,89 @@ dialog::backdrop{
   <button data-filter="conditions">Temperature & Wind</button>
 </nav>
 
+
+<div id="emergencyBanner" class="emergency-banner" role="alert"></div>
+
+<section class="release-one" aria-label="ARW personalized weather operations">
+  <div class="operations-grid">
+
+    <article class="operations-panel">
+      <p class="eyebrow">Personal Weather Briefing</p>
+      <h2>Weather at My Location</h2>
+
+      <p class="operations-description">
+        Search any United States city or ZIP code for current conditions and
+        a five-day planning forecast.
+      </p>
+
+      <form id="locationForm" class="location-form">
+        <input
+          id="locationInput"
+          type="search"
+          placeholder="Enter city or ZIP code"
+          aria-label="Enter a United States city or ZIP code"
+          required
+        >
+        <button type="submit">Get Weather</button>
+      </form>
+
+      <div id="locationResult" class="location-result">
+        Enter a location to create your personal ARW weather briefing.
+      </div>
+
+      <div id="savedLocations" class="saved-locations"></div>
+    </article>
+
+    <article class="operations-panel">
+      <p class="eyebrow">Nationwide Situation Report</p>
+      <h2>ARW National Threat Board</h2>
+
+      <p class="operations-description">
+        Threat levels are calculated from active National Weather Service
+        alerts. They describe current alert activity, not a prediction.
+      </p>
+
+      <div id="threatBoard" class="threat-board">
+        <div class="threat-item">
+          <span>Tornado</span>
+          <strong>Loadingâ€¦</strong>
+        </div>
+
+        <div class="threat-item">
+          <span>Severe Storm</span>
+          <strong>Loadingâ€¦</strong>
+        </div>
+
+        <div class="threat-item">
+          <span>Flooding</span>
+          <strong>Loadingâ€¦</strong>
+        </div>
+
+        <div class="threat-item">
+          <span>Tropical</span>
+          <strong>Loadingâ€¦</strong>
+        </div>
+
+        <div class="threat-item">
+          <span>Winter</span>
+          <strong>Loadingâ€¦</strong>
+        </div>
+
+        <div class="threat-item">
+          <span>Extreme Heat</span>
+          <strong>Loadingâ€¦</strong>
+        </div>
+      </div>
+
+      <p class="threat-note">
+        LOW means no matching active alerts were found. ELEVATED, HIGH and
+        EXTREME represent increasing numbers or severity of official alerts.
+        Always open the official alert for local instructions.
+      </p>
+    </article>
+
+  </div>
+</section>
 <main class="dashboard" id="dashboard"></main>
 
 <section class="education">
@@ -660,7 +921,7 @@ function buildCards(){
      <p class="eyebrow">${feed.g}</p>
      <h2>${feed.t}</h2>
     </div>
-    <span class="tag">● LIVE</span>
+    <span class="tag">â— LIVE</span>
    </div>
 
    <div class="media">
@@ -670,7 +931,7 @@ function buildCards(){
      loading="lazy"
      referrerpolicy="no-referrer"
     >
-    <span class="caption">Official live feed · automatic refresh</span>
+    <span class="caption">Official live feed &middot; automatic refresh</span>
    </div>
 
    <div class="cardbody">
@@ -690,7 +951,7 @@ function buildCards(){
   image.onerror=()=>{
    image.style.opacity=".2";
    card.querySelector(".caption").textContent=
-    "Feed temporarily unavailable — use Official Source";
+    "Feed temporarily unavailable â€” use Official Source";
   };
 
   dashboard.appendChild(card);
@@ -762,9 +1023,9 @@ async function loadAlerts(){
   ).length;
 
   text.textContent=
-   `${alerts.length} active NWS alerts nationwide · `+
-   `${serious} severe or extreme · `+
-   `${tornado} tornado-related · `+
+   `${alerts.length} active NWS alerts nationwide &middot; `+
+   `${serious} severe or extreme &middot; `+
+   `${tornado} tornado-related &middot; `+
    `${flood} flood-related`;
  }
  catch(error){
@@ -783,6 +1044,268 @@ function updateClock(){
   }).format(new Date())+" ET";
 }
 
+
+async function findLocationWeather(searchTerm){
+  const result=document.getElementById("locationResult");
+
+  result.innerHTML="Finding location and loading weatherâ€¦";
+
+  try{
+    const geoUrl=
+      "https://geocoding-api.open-meteo.com/v1/search?count=1&language=en&format=json&countryCode=US&name="+
+      encodeURIComponent(searchTerm);
+
+    const geoResponse=await fetch(geoUrl);
+
+    if(!geoResponse.ok) throw new Error("Location search failed");
+
+    const geoData=await geoResponse.json();
+
+    if(!geoData.results || !geoData.results.length){
+      result.innerHTML="<strong>Location not found.</strong><br>Try a city and state or a five-digit ZIP code.";
+      return;
+    }
+
+    const place=geoData.results[0];
+
+    const weatherUrl=
+      "https://api.open-meteo.com/v1/forecast"+
+      "?latitude="+place.latitude+
+      "&longitude="+place.longitude+
+      "&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m"+
+      "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max"+
+      "&temperature_unit=fahrenheit"+
+      "&wind_speed_unit=mph"+
+      "&precipitation_unit=inch"+
+      "&timezone=auto"+
+      "&forecast_days=5";
+
+    const weatherResponse=await fetch(weatherUrl);
+
+    if(!weatherResponse.ok) throw new Error("Weather request failed");
+
+    const weather=await weatherResponse.json();
+
+    const current=weather.current;
+    const daily=weather.daily;
+
+    const days=daily.time.map((date,index)=>{
+      const dayName=new Intl.DateTimeFormat(
+        "en-US",
+        {weekday:"short",timeZone:"UTC"}
+      ).format(new Date(date+"T12:00:00Z"));
+
+      return `
+        <div class="forecast-day">
+          <strong>${dayName}</strong>
+          <span>${Math.round(daily.temperature_2m_max[index])}&deg; /
+          ${Math.round(daily.temperature_2m_min[index])}&deg;</span>
+          <span>Rain ${daily.precipitation_probability_max[index] ?? 0}%</span>
+          <span>Wind ${Math.round(daily.wind_speed_10m_max[index])} mph</span>
+        </div>
+      `;
+    }).join("");
+
+    const displayName=
+      place.name+
+      (place.admin1 ? ", "+place.admin1 : "");
+
+    result.innerHTML=`
+      <h3>${displayName}</h3>
+
+      <div class="location-current">
+        <div class="weather-value">
+          <small>Temperature</small>
+          <strong>${Math.round(current.temperature_2m)}&deg;F</strong>
+        </div>
+
+        <div class="weather-value">
+          <small>Feels Like</small>
+          <strong>${Math.round(current.apparent_temperature)}&deg;F</strong>
+        </div>
+
+        <div class="weather-value">
+          <small>Wind</small>
+          <strong>${Math.round(current.wind_speed_10m)} mph</strong>
+        </div>
+
+        <div class="weather-value">
+          <small>Current Rain</small>
+          <strong>${Number(current.precipitation).toFixed(2)} in</strong>
+        </div>
+      </div>
+
+      <div class="forecast-row">${days}</div>
+
+      <button
+        type="button"
+        style="margin-top:10px"
+        onclick="saveARWLocation('${displayName.replace(/'/g,"")}')"
+      >
+        Save Location
+      </button>
+    `;
+  }
+  catch(error){
+    result.innerHTML=
+      "<strong>Weather temporarily unavailable.</strong><br>"+
+      "Check your internet connection and try again.";
+  }
+}
+
+function getSavedARWLocations(){
+  try{
+    return JSON.parse(localStorage.getItem("arwSavedLocations") || "[]");
+  }
+  catch{
+    return [];
+  }
+}
+
+function saveARWLocation(locationName){
+  const locations=getSavedARWLocations();
+
+  if(!locations.includes(locationName)){
+    locations.push(locationName);
+  }
+
+  localStorage.setItem(
+    "arwSavedLocations",
+    JSON.stringify(locations.slice(-6))
+  );
+
+  renderSavedARWLocations();
+}
+
+function renderSavedARWLocations(){
+  const holder=document.getElementById("savedLocations");
+
+  if(!holder) return;
+
+  const locations=getSavedARWLocations();
+
+  holder.innerHTML=locations.map(location=>`
+    <button
+      type="button"
+      onclick="document.getElementById('locationInput').value='${location}';findLocationWeather('${location}')"
+    >
+      ${location}
+    </button>
+  `).join("");
+}
+
+function threatLevel(alerts,type){
+  const matching=alerts.filter(alert=>{
+    const event=(alert.properties.event || "").toLowerCase();
+    return type.words.some(word=>event.includes(word));
+  });
+
+  const extreme=matching.filter(alert=>
+    alert.properties.severity==="Extreme"
+  ).length;
+
+  const severe=matching.filter(alert=>
+    alert.properties.severity==="Severe"
+  ).length;
+
+  if(extreme>0 || matching.length>=20){
+    return {label:"EXTREME",className:"level-extreme",count:matching.length};
+  }
+
+  if(severe>0 || matching.length>=8){
+    return {label:"HIGH",className:"level-high",count:matching.length};
+  }
+
+  if(matching.length>0){
+    return {label:"ELEVATED",className:"level-elevated",count:matching.length};
+  }
+
+  return {label:"LOW",className:"level-low",count:0};
+}
+
+async function loadARWThreatBoard(){
+  const board=document.getElementById("threatBoard");
+
+  try{
+    const response=await fetch(
+      "https://api.weather.gov/alerts/active?status=actual&message_type=alert",
+      {headers:{"Accept":"application/geo+json"}}
+    );
+
+    if(!response.ok) throw new Error();
+
+    const data=await response.json();
+    const alerts=data.features || [];
+
+    const categories=[
+      {name:"Tornado",words:["tornado"]},
+      {name:"Severe Storm",words:["severe thunderstorm"]},
+      {name:"Flooding",words:["flood","flash flood"]},
+      {name:"Tropical",words:["hurricane","tropical storm","storm surge"]},
+      {name:"Winter",words:["winter storm","blizzard","ice storm","snow squall"]},
+      {name:"Extreme Heat",words:["extreme heat","heat warning","heat advisory"]}
+    ];
+
+    board.innerHTML=categories.map(category=>{
+      const level=threatLevel(alerts,category);
+
+      return `
+        <div class="threat-item">
+          <span>${category.name}</span>
+          <strong class="${level.className}">
+            ${level.label} &middot; ${level.count} alerts
+          </strong>
+        </div>
+      `;
+    }).join("");
+
+    const mostUrgent=alerts.filter(alert=>
+      alert.properties.severity==="Extreme" &&
+      alert.properties.urgency==="Immediate"
+    );
+
+    const banner=document.getElementById("emergencyBanner");
+
+    if(mostUrgent.length){
+      banner.classList.add("active");
+      banner.textContent=
+        "NATIONAL EMERGENCY WEATHER MODE: "+
+        mostUrgent.length+
+        " immediate extreme NWS alert"+
+        (mostUrgent.length===1 ? " is" : "s are")+
+        " active. Check official local warnings now.";
+    }
+    else{
+      banner.classList.remove("active");
+      banner.textContent="";
+    }
+  }
+  catch{
+    board.innerHTML=`
+      <div class="threat-item" style="grid-column:1/-1">
+        <span>System Status</span>
+        <strong class="level-elevated">
+          Official alert connection temporarily unavailable
+        </strong>
+      </div>
+    `;
+  }
+}
+
+document.getElementById("locationForm").addEventListener("submit",event=>{
+  event.preventDefault();
+
+  const searchTerm=document.getElementById("locationInput").value.trim();
+
+  if(searchTerm){
+    findLocationWeather(searchTerm);
+  }
+});
+
+renderSavedARWLocations();
+loadARWThreatBoard();
+
+setInterval(loadARWThreatBoard,300000);
 buildCards();
 loadAlerts();
 updateClock();
