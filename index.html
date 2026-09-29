@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#06111f">
+<title>ARW National Weather Operations Center</title>
+
+<style>
+:root{
+  --bg:#030810;
+  --panel:#081624;
+  --panel2:#0b2135;
+  --line:#1c4564;
+  --text:#eef8ff;
+  --muted:#9bb0c2;
+  --cyan:#39d9ff;
+  --green:#39e39a;
+  --red:#ff365d;
+}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 25% 0,#113b62 0,transparent 28rem),
+    linear-gradient(180deg,#06111f,#030810);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+header{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:16px;
+  padding:18px 3%;
+  background:rgba(3,8,16,.94);
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.logo{
+  width:68px;
+  height:68px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#173957,#050b12);
+  border:2px solid var(--cyan);
+  clip-path:polygon(50% 0,96% 24%,87% 82%,50% 100%,13% 82%,4% 24%);
+  font-weight:900;
+  font-size:22px;
+  font-style:italic;
+}
+
+.logo span{color:var(--cyan)}
+
+.eyebrow{
+  margin:0;
+  color:var(--cyan);
+  text-transform:uppercase;
+  letter-spacing:2px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+h1{
+  margin:3px 0;
+  font-size:clamp(21px,3vw,34px);
+}
+
+.subtitle{
+  color:var(--muted);
+  font-size:14px;
+  margin:0;
+}
+
+.status{
+  border:1px solid var(--line);
+  padding:10px 13px;
+  background:#071421;
+  font-size:12px;
+  min-width:180px;
+}
+
+.live{
+  color:var(--green);
+  font-weight:bold;
+}
+
+.alertbar{
+  padding:12px 3%;
+  background:linear-gradient(90deg,rgba(255,54,93,.22),rgba(255,189,62,.08));
+  border-bottom:1px solid #692e3a;
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.alertbar strong{color:#fff}
+
+#alertText{
+  flex:1;
+  color:#dce9f2;
+  font-size:14px;
+}
+
+button,.source{
+  border:1px solid #2b5878;
+  background:#0a2033;
+  color:#fff;
+  padding:9px 12px;
+  cursor:pointer;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+button:hover,.source:hover{
+  border-color:var(--cyan);
+}
+
+.filters{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  padding:16px 3%;
+}
+
+.filters button{
+  white-space:nowrap;
+  color:var(--muted);
+}
+
+.filters button.active{
+  color:#fff;
+  background:#17486d;
+  border-color:var(--cyan);
+}
+
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:15px;
+  padding:0 3% 40px;
+}
+
+.card{
+  min-width:0;
+  background:linear-gradient(180deg,var(--panel2),var(--panel));
+  border:1px solid var(--line);
+  box-shadow:0 14px 35px rgba(0,0,0,.38);
+}
+
+.card.hidden{display:none}
+
+.cardhead{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+  padding:13px;
+  border-bottom:1px solid var(--line);
+}
+
+.cardhead h2{
+  margin:4px 0 0;
+  font-size:16px;
+}
+
+.tag{
+  color:var(--green);
+  font-size:11px;
+  font-weight:bold;
+}
+
+.media{
+  aspect-ratio:4/3;
+  position:relative;
+  background:#02060b;
+  overflow:hidden;
+}
+
+.media img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  background:white;
+}
+
+.caption{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:8px;
+  font-size:11px;
+  background:linear-gradient(transparent,rgba(0,0,0,.9));
+}
+
+.cardbody{padding:13px}
+
+.cardbody p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  min-height:38px;
+  margin:0 0 12px;
+}
+
+.actions{
+  display:flex;
+  gap:7px;
+}
+
+.actions button,.actions a{
+  flex:1;
+  text-align:center;
+  font-size:12px;
+}
+
+.education{
+  padding:35px 3%;
+  border-top:1px solid var(--line);
+  background:#07131f;
+}
+
+.education h2{
+  margin:5px 0 20px;
+  font-size:28px;
+}
+
+.lessons{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+
+.lesson{
+  padding:16px;
+  background:#0a1a29;
+  border-top:3px solid var(--cyan);
+}
+
+.lesson h3{margin:8px 0}
+
+.lesson p{
+  color:var(--muted);
+  line-height:1.5;
+  font-size:14px;
+  margin:0;
+}
+
+.adbox{
+  margin:30px 3%;
+  padding:22px;
+  text-align:center;
+  border:1px dashed #43617a;
+  color:#7890a2;
+}
+
+footer{
+  padding:25px 3%;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+dialog{
+  width:min(1100px,96vw);
+  height:min(850px,94vh);
+  padding:0;
+  border:1px solid var(--cyan);
+  background:#040c15;
+  color:white;
+}
+
+dialog::backdrop{
+  background:rgba(0,0,0,.9);
+}
+
+.dialoghead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  border-bottom:1px solid var(--line);
+}
+
+.dialoghead h2{margin:0}
+
+.dialogimage{
+  height:calc(100% - 125px);
+  display:grid;
+  place-items:center;
+}
+
+.dialogimage img{
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+}
+
+.dialogfoot{
+  padding:12px 15px;
+  border-top:1px solid var(--line);
+}
+
+.dialogfoot a{color:var(--cyan)}
+
+@media(max-width:1200px){
+  .dashboard{grid-template-columns:repeat(3,1fr)}
+  .lessons{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:800px){
+  header{grid-template-columns:auto 1fr}
+  .status{grid-column:1/-1}
+  .dashboard{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:550px){
+  header{position:relative;padding:12px}
+  .logo{width:54px;height:54px;font-size:17px}
+  .subtitle{display:none}
+  .dashboard{grid-template-columns:1fr;padding:0 10px 30px}
+  .filters{padding:12px 10px}
+  .alertbar{align-items:flex-start;flex-wrap:wrap}
+  .lessons{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">AR<span>W</span></div>
+
+  <div>
+    <p class="eyebrow">American Recon Weather Unit</p>
+    <h1>National Weather Operations Center</h1>
+    <p class="subtitle">
+      Live U.S. radar, satellite, severe weather, tropical and forecast intelligence
+    </p>
+  </div>
+
+  <div class="status">
+    <div class="live">● LIVE MONITORING</div>
+    <div id="clock">Loading Eastern Time…</div>
+  </div>
+</header>
+
+<section class="alertbar">
+  <strong>⚠ NATIONAL ALERTS</strong>
+  <span id="alertText">Connecting to the National Weather Service…</span>
+  <button onclick="refreshFeeds()">Refresh feeds</button>
+</section>
+
+<nav class="filters">
+  <button class="active" data-filter="all">All Screens</button>
+  <button data-filter="radar">Radar & Satellite</button>
+  <button data-filter="severe">Severe Weather</button>
+  <button data-filter="tropical">Tropical Center</button>
+  <button data-filter="rain">Rain Forecast</button>
+  <button data-filter="conditions">Temperature & Wind</button>
+</nav>
+
+<main class="dashboard" id="dashboard"></main>
+
+<section class="education">
+  <p class="eyebrow">Weather Field Guide</p>
+  <h2>How forecasters read the atmosphere</h2>
+
+  <div class="lessons">
+    <article class="lesson">
+      <strong>01</strong>
+      <h3>Radar Reflectivity</h3>
+      <p>
+        Reflectivity shows energy returned to the radar. Stronger colors can
+        indicate heavier precipitation, but hail and non-weather objects can
+        also produce stronger returns.
+      </p>
+    </article>
+
+    <article class="lesson">
+      <strong>02</strong>
+      <h3>Radar Velocity</h3>
+      <p>
+        Velocity measures motion toward or away from the radar. Strong
+        inbound and outbound differences near each other can indicate
+        rotation, but trained interpretation is essential.
+      </p>
+    </article>
+
+    <article class="lesson">
+      <strong>03</strong>
+      <h3>Satellite Imagery</h3>
+      <p>
+        Visible satellite imagery shows reflected daylight. Infrared imagery
+        measures cloud-top temperatures and continues operating at night.
+      </p>
+    </article>
+
+    <article class="lesson">
+      <strong>04</strong>
+      <h3>Outlooks and Warnings</h3>
+      <p>
+        Outlooks describe probability across an area. A watch means prepare
+        for possible hazardous weather. A warning means dangerous weather is
+        occurring or imminent and people should act.
+      </p>
+    </article>
+  </div>
+</section>
+
+<div class="adbox">
+  FUTURE SPONSOR AND ADVERTISING SPACE<br>
+  <small>Advertising is disabled during the initial weather-center launch.</small>
+</div>
+
+<footer>
+  <strong>American Recon Weather Unit</strong><br><br>
+  Live weather information is provided through public NOAA, National Weather
+  Service, National Hurricane Center, Storm Prediction Center, Weather
+  Prediction Center and NESDIS products.<br><br>
+  This is an independent weather-information dashboard and is not an official
+  government forecast. Always follow local NWS warnings, evacuation orders
+  and emergency-management instructions.
+</footer>
+
+<dialog id="viewer">
+  <div class="dialoghead">
+    <h2 id="viewerTitle">Weather Map</h2>
+    <button onclick="viewer.close()">Close</button>
+  </div>
+
+  <div class="dialogimage">
+    <img id="viewerImage" alt="Full-screen weather map">
+  </div>
+
+  <div class="dialogfoot">
+    <a id="viewerSource" href="#" target="_blank" rel="noopener">
+      Open official government source
+    </a>
+  </div>
+</dialog>
+
+<script>
+const feeds=[
+{
+ t:"U.S. National Radar Loop",
+ c:"radar",
+ g:"Radar & Satellite",
+ i:"https://radar.weather.gov/ridge/standard/CONUS-LARGE_loop.gif",
+ s:"https://radar.weather.gov/",
+ n:"Animated NWS radar mosaic covering the continental United States."
+},
+{
+ t:"Southeast Radar Loop",
+ c:"radar",
+ g:"Radar & Satellite",
+ i:"https://radar.weather.gov/ridge/standard/SOUTHEAST_loop.gif",
+ s:"https://radar.weather.gov/",
+ n:"Regional radar loop covering Florida and the southeastern United States."
+},
+{
+ t:"Northeast Radar Loop",
+ c:"radar",
+ g:"Radar & Satellite",
+ i:"https://radar.weather.gov/ridge/standard/NORTHEAST_loop.gif",
+ s:"https://radar.weather.gov/",
+ n:"Regional NWS radar loop for the northeastern United States."
+},
+{
+ t:"South Plains Radar Loop",
+ c:"radar",
+ g:"Radar & Satellite",
+ i:"https://radar.weather.gov/ridge/standard/SOUTHPLAINS_loop.gif",
+ s:"https://radar.weather.gov/",
+ n:"Regional radar monitoring for Texas and the southern Plains."
+},
+{
+ t:"GOES-East Satellite",
+ c:"radar",
+ g:"Radar & Satellite",
+ i:"https://cdn.star.nesdis.noaa.gov/GOES19/ABI/CONUS/GEOCOLOR/1250x750.jpg",
+ s:"https://www.star.nesdis.noaa.gov/goes/conus.php",
+ n:"Latest NOAA GOES-East GeoColor satellite image."
+},
+{
+ t:"GOES-West Satellite",
+ c:"radar",
+ g:"Radar & Satellite",
+ i:"https://cdn.star.nesdis.noaa.gov/GOES18/ABI/CONUS/GEOCOLOR/1250x750.jpg",
+ s:"https://www.star.nesdis.noaa.gov/goes/conus.php?sat=G18",
+ n:"Latest NOAA GOES-West GeoColor satellite image."
+},
+{
+ t:"Current Tornado and Severe Watches",
+ c:"severe",
+ g:"Severe Weather",
+ i:"https://www.spc.noaa.gov/products/watch/validww.png",
+ s:"https://www.spc.noaa.gov/products/watch/",
+ n:"Current tornado and severe-thunderstorm watches issued by the SPC."
+},
+{
+ t:"Today's Severe Weather Outlook",
+ c:"severe",
+ g:"Severe Weather",
+ i:"https://www.spc.noaa.gov/products/outlook/day1otlk.gif",
+ s:"https://www.spc.noaa.gov/products/outlook/day1otlk.html",
+ n:"Storm Prediction Center Day 1 severe-weather outlook."
+},
+{
+ t:"Tomorrow's Severe Weather Outlook",
+ c:"severe",
+ g:"Severe Weather",
+ i:"https://www.spc.noaa.gov/products/outlook/day2otlk.gif",
+ s:"https://www.spc.noaa.gov/products/outlook/day2otlk.html",
+ n:"Storm Prediction Center Day 2 severe-weather outlook."
+},
+{
+ t:"Day 3 Severe Weather Outlook",
+ c:"severe",
+ g:"Severe Weather",
+ i:"https://www.spc.noaa.gov/products/outlook/day3otlk.gif",
+ s:"https://www.spc.noaa.gov/products/outlook/day3otlk.html",
+ n:"Storm Prediction Center Day 3 severe-weather outlook."
+},
+{
+ t:"Atlantic 7-Day Tropical Outlook",
+ c:"tropical",
+ g:"Tropical Center",
+ i:"https://www.nhc.noaa.gov/xgtwo/two_atl_7d0.png",
+ s:"https://www.nhc.noaa.gov/gtwo.php?basin=atlc&fdays=7",
+ n:"NHC Atlantic tropical-cyclone formation outlook."
+},
+{
+ t:"Eastern Pacific Tropical Outlook",
+ c:"tropical",
+ g:"Tropical Center",
+ i:"https://www.nhc.noaa.gov/xgtwo/two_pac_7d0.png",
+ s:"https://www.nhc.noaa.gov/gtwo.php?basin=epac&fdays=7",
+ n:"NHC eastern Pacific tropical-cyclone formation outlook."
+},
+{
+ t:"Central Pacific Tropical Outlook",
+ c:"tropical",
+ g:"Tropical Center",
+ i:"https://www.nhc.noaa.gov/xgtwo/two_cpac_7d0.png",
+ s:"https://www.nhc.noaa.gov/gtwo.php?basin=cpac&fdays=7",
+ n:"NHC central Pacific tropical-cyclone formation outlook."
+},
+{
+ t:"24-Hour Rainfall Forecast",
+ c:"rain",
+ g:"Rain & Forecast",
+ i:"https://www.wpc.ncep.noaa.gov/qpf/fill_94qwbg.gif",
+ s:"https://www.wpc.ncep.noaa.gov/qpf/qpf2.shtml",
+ n:"Weather Prediction Center 24-hour rainfall forecast."
+},
+{
+ t:"Five-Day Rainfall Forecast",
+ c:"rain",
+ g:"Rain & Forecast",
+ i:"https://www.wpc.ncep.noaa.gov/qpf/p120i.gif",
+ s:"https://www.wpc.ncep.noaa.gov/qpf/day1-7.shtml",
+ n:"Expected total precipitation through the next five days."
+},
+{
+ t:"Today's Excessive Rainfall Outlook",
+ c:"rain",
+ g:"Rain & Forecast",
+ i:"https://www.wpc.ncep.noaa.gov/qpf/94ewbg.gif",
+ s:"https://www.wpc.ncep.noaa.gov/qpf/excessive_rainfall_outlook_ero.php",
+ n:"Day 1 risk areas for excessive rainfall and flash flooding."
+},
+{
+ t:"Tomorrow's Excessive Rainfall Outlook",
+ c:"rain",
+ g:"Rain & Forecast",
+ i:"https://www.wpc.ncep.noaa.gov/qpf/98ewbg.gif",
+ s:"https://www.wpc.ncep.noaa.gov/qpf/excessive_rainfall_outlook_ero.php",
+ n:"Day 2 risk areas for excessive rainfall and flash flooding."
+},
+{
+ t:"National Forecast Chart",
+ c:"conditions",
+ g:"Temperature & Wind",
+ i:"https://www.wpc.ncep.noaa.gov/noaa/noaa.gif",
+ s:"https://www.wpc.ncep.noaa.gov/national_forecast/natfcst.php",
+ n:"National fronts, pressure systems, precipitation and expected weather."
+},
+{
+ t:"U.S. Surface Analysis",
+ c:"conditions",
+ g:"Temperature & Wind",
+ i:"https://www.wpc.ncep.noaa.gov/sfc/namussfcwbg.gif",
+ s:"https://www.wpc.ncep.noaa.gov/html/sfc2.shtml",
+ n:"Current surface fronts and areas of high and low pressure."
+},
+{
+ t:"National Temperature Forecast",
+ c:"conditions",
+ g:"Temperature & Wind",
+ i:"https://graphical.weather.gov/images/conus/MaxT1_conus.png",
+ s:"https://digital.weather.gov/",
+ n:"National maximum-temperature forecast."
+},
+{
+ t:"National Wind Forecast",
+ c:"conditions",
+ g:"Temperature & Wind",
+ i:"https://graphical.weather.gov/images/conus/WindSpd1_conus.png",
+ s:"https://digital.weather.gov/",
+ n:"National wind-speed forecast."
+},
+{
+ t:"Alaska Radar Loop",
+ c:"radar",
+ g:"Radar & Satellite",
+ i:"https://radar.weather.gov/ridge/standard/ALASKA_loop.gif",
+ s:"https://radar.weather.gov/",
+ n:"National Weather Service radar mosaic for Alaska."
+},
+{
+ t:"Hawaii Radar Loop",
+ c:"radar",
+ g:"Radar & Satellite",
+ i:"https://radar.weather.gov/ridge/standard/HAWAII_loop.gif",
+ s:"https://radar.weather.gov/",
+ n:"National Weather Service radar mosaic for Hawaii."
+}
+];
+
+const dashboard=document.getElementById("dashboard");
+const viewer=document.getElementById("viewer");
+
+function stamp(){
+ return "refresh="+Math.floor(Date.now()/300000);
+}
+
+function buildCards(){
+ dashboard.innerHTML="";
+
+ feeds.forEach((feed,index)=>{
+  const card=document.createElement("article");
+  card.className="card";
+  card.dataset.category=feed.c;
+
+  card.innerHTML=`
+   <div class="cardhead">
+    <div>
+     <p class="eyebrow">${feed.g}</p>
+     <h2>${feed.t}</h2>
+    </div>
+    <span class="tag">● LIVE</span>
+   </div>
+
+   <div class="media">
+    <img
+     src="${feed.i}?${stamp()}"
+     alt="${feed.t}"
+     loading="lazy"
+     referrerpolicy="no-referrer"
+    >
+    <span class="caption">Official live feed · automatic refresh</span>
+   </div>
+
+   <div class="cardbody">
+    <p>${feed.n}</p>
+
+    <div class="actions">
+     <button onclick="openViewer(${index})">Full Screen</button>
+     <a class="source" href="${feed.s}" target="_blank" rel="noopener">
+      Official Source
+     </a>
+    </div>
+   </div>
+  `;
+
+  const image=card.querySelector("img");
+
+  image.onerror=()=>{
+   image.style.opacity=".2";
+   card.querySelector(".caption").textContent=
+    "Feed temporarily unavailable — use Official Source";
+  };
+
+  dashboard.appendChild(card);
+ });
+}
+
+function openViewer(index){
+ const feed=feeds[index];
+
+ document.getElementById("viewerTitle").textContent=feed.t;
+ document.getElementById("viewerImage").src=feed.i+"?"+stamp();
+ document.getElementById("viewerSource").href=feed.s;
+
+ viewer.showModal();
+}
+
+function refreshFeeds(){
+ document.querySelectorAll(".card img").forEach((image,index)=>{
+  image.style.opacity="1";
+  image.src=feeds[index].i+"?"+stamp();
+ });
+
+ loadAlerts();
+}
+
+document.querySelectorAll(".filters button").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll(".filters button").forEach(item=>{
+   item.classList.remove("active");
+  });
+
+  button.classList.add("active");
+
+  const selected=button.dataset.filter;
+
+  document.querySelectorAll(".card").forEach(card=>{
+   card.classList.toggle(
+    "hidden",
+    selected!=="all" && card.dataset.category!==selected
+   );
+  });
+ });
+});
+
+async function loadAlerts(){
+ const text=document.getElementById("alertText");
+
+ try{
+  const response=await fetch(
+   "https://api.weather.gov/alerts/active?status=actual&message_type=alert",
+   {headers:{"Accept":"application/geo+json"}}
+  );
+
+  if(!response.ok) throw new Error();
+
+  const data=await response.json();
+  const alerts=data.features || [];
+
+  const serious=alerts.filter(alert=>
+   ["Severe","Extreme"].includes(alert.properties.severity)
+  ).length;
+
+  const tornado=alerts.filter(alert=>
+   /Tornado/i.test(alert.properties.event)
+  ).length;
+
+  const flood=alerts.filter(alert=>
+   /Flood/i.test(alert.properties.event)
+  ).length;
+
+  text.textContent=
+   `${alerts.length} active NWS alerts nationwide · `+
+   `${serious} severe or extreme · `+
+   `${tornado} tornado-related · `+
+   `${flood} flood-related`;
+ }
+ catch(error){
+  text.textContent=
+   "The nationwide alert count is temporarily unavailable. "+
+   "Official weather maps remain accessible below.";
+ }
+}
+
+function updateClock(){
+ document.getElementById("clock").textContent=
+  new Intl.DateTimeFormat("en-US",{
+   dateStyle:"medium",
+   timeStyle:"medium",
+   timeZone:"America/New_York"
+  }).format(new Date())+" ET";
+}
+
+buildCards();
+loadAlerts();
+updateClock();
+
+setInterval(updateClock,1000);
+setInterval(refreshFeeds,300000);
+</script>
+
+</body>
+</html>
