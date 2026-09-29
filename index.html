@@ -529,14 +529,14 @@ dialog::backdrop{
   </div>
 
   <div class="status">
-    <div class="live">â— LIVE MONITORING</div>
-    <div id="clock">Loading Eastern Timeâ€¦</div>
+    <div class="live">LIVE MONITORING</div>
+    <div id="clock">Loading Eastern Time</div>
   </div>
 </header>
 
 <section class="alertbar">
-  <strong>âš  NATIONAL ALERTS</strong>
-  <span id="alertText">Connecting to the National Weather Serviceâ€¦</span>
+  <strong>NATIONAL ALERTS</strong>
+  <span id="alertText">Connecting to the National Weather Service</span>
   <button onclick="refreshFeeds()">Refresh feeds</button>
 </section>
 
@@ -594,32 +594,32 @@ dialog::backdrop{
       <div id="threatBoard" class="threat-board">
         <div class="threat-item">
           <span>Tornado</span>
-          <strong>Loadingâ€¦</strong>
+          <strong>Loading</strong>
         </div>
 
         <div class="threat-item">
           <span>Severe Storm</span>
-          <strong>Loadingâ€¦</strong>
+          <strong>Loading</strong>
         </div>
 
         <div class="threat-item">
           <span>Flooding</span>
-          <strong>Loadingâ€¦</strong>
+          <strong>Loading</strong>
         </div>
 
         <div class="threat-item">
           <span>Tropical</span>
-          <strong>Loadingâ€¦</strong>
+          <strong>Loading</strong>
         </div>
 
         <div class="threat-item">
           <span>Winter</span>
-          <strong>Loadingâ€¦</strong>
+          <strong>Loading</strong>
         </div>
 
         <div class="threat-item">
           <span>Extreme Heat</span>
-          <strong>Loadingâ€¦</strong>
+          <strong>Loading</strong>
         </div>
       </div>
 
@@ -921,7 +921,7 @@ function buildCards(){
      <p class="eyebrow">${feed.g}</p>
      <h2>${feed.t}</h2>
     </div>
-    <span class="tag">â— LIVE</span>
+    <span class="tag">LIVE</span>
    </div>
 
    <div class="media">
@@ -951,7 +951,7 @@ function buildCards(){
   image.onerror=()=>{
    image.style.opacity=".2";
    card.querySelector(".caption").textContent=
-    "Feed temporarily unavailable â€” use Official Source";
+    "Feed temporarily unavailable  use Official Source";
   };
 
   dashboard.appendChild(card);
@@ -1048,7 +1048,7 @@ function updateClock(){
 async function findLocationWeather(searchTerm){
   const result=document.getElementById("locationResult");
 
-  result.innerHTML="Finding location and loading weatherâ€¦";
+  result.innerHTML="Finding location and loading weather";
 
   try{
     const geoUrl=
