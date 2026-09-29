@@ -1377,5 +1377,1261 @@ setInterval(refreshFeeds,300000);
     setTimeout(install,500);
 })();
 </script>
+<!-- ARW LEARNING CENTER START -->
+<style id="arw-learning-center-styles">
+#arw-learning-center{
+    margin:42px auto 24px;
+    padding:28px;
+    max-width:1600px;
+    color:#eef8ff;
+    background:
+      radial-gradient(circle at 15% 0%,rgba(0,238,218,.10),transparent 30%),
+      linear-gradient(145deg,#101a23,#081017 72%);
+    border:1px solid rgba(91,216,231,.38);
+    box-shadow:0 18px 55px rgba(0,0,0,.34);
+}
+
+#arw-learning-center *{
+    box-sizing:border-box;
+}
+
+.arw-guide-kicker{
+    margin:0 0 6px;
+    color:#4cf4e0;
+    font-size:.82rem;
+    font-weight:900;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+}
+
+.arw-guide-title{
+    margin:0;
+    color:#ffffff;
+    font-size:clamp(1.75rem,3.2vw,3rem);
+    line-height:1.08;
+}
+
+.arw-guide-intro{
+    max-width:980px;
+    margin:12px 0 24px;
+    color:#b9c9d5;
+    font-size:1rem;
+    line-height:1.6;
+}
+
+.arw-guide-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:16px;
+}
+
+.arw-guide-card{
+    overflow:hidden;
+    min-width:0;
+    background:linear-gradient(160deg,#172632,#0d151d);
+    border:1px solid rgba(93,210,229,.3);
+}
+
+.arw-guide-image{
+    height:190px;
+    padding:12px;
+    background:#071018;
+    border-bottom:1px solid rgba(93,210,229,.25);
+}
+
+.arw-guide-image svg{
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+.arw-guide-body{
+    padding:17px;
+}
+
+.arw-guide-number{
+    color:#4cf4e0;
+    font-size:.74rem;
+    font-weight:900;
+    letter-spacing:.15em;
+}
+
+.arw-guide-body h3{
+    margin:5px 0 9px;
+    color:#fff;
+    font-size:1.2rem;
+}
+
+.arw-guide-body p{
+    margin:0 0 9px;
+    color:#c7d5de;
+    line-height:1.5;
+    font-size:.92rem;
+}
+
+.arw-read-rule{
+    padding:9px 11px;
+    color:#ecfbff;
+    background:rgba(28,211,200,.08);
+    border-left:3px solid #26e4d1;
+    font-size:.86rem;
+    line-height:1.45;
+}
+
+.arw-velocity-center{
+    margin-top:27px;
+    padding:20px;
+    background:#09131b;
+    border:1px solid rgba(91,216,231,.42);
+}
+
+.arw-velocity-heading{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:15px;
+    margin-bottom:15px;
+}
+
+.arw-velocity-heading h2{
+    margin:4px 0;
+    color:#fff;
+    font-size:clamp(1.45rem,2.6vw,2.25rem);
+}
+
+.arw-live-badge{
+    flex:0 0 auto;
+    padding:7px 11px;
+    color:#07120d;
+    background:#43f28e;
+    font-size:.75rem;
+    font-weight:950;
+    letter-spacing:.12em;
+}
+
+.arw-velocity-layout{
+    display:grid;
+    grid-template-columns:minmax(0,1.7fr) minmax(275px,.8fr);
+    gap:17px;
+}
+
+.arw-velocity-screen{
+    position:relative;
+    min-height:430px;
+    overflow:hidden;
+    background:#02070a;
+    border:1px solid #31566a;
+}
+
+.arw-velocity-screen img{
+    display:block;
+    width:100%;
+    height:430px;
+    object-fit:contain;
+    background:#02070a;
+}
+
+.arw-radar-label{
+    position:absolute;
+    left:12px;
+    top:12px;
+    max-width:calc(100% - 24px);
+    padding:8px 11px;
+    color:#fff;
+    background:rgba(0,8,13,.84);
+    border-left:3px solid #42efd9;
+    font-weight:800;
+    line-height:1.35;
+}
+
+.arw-velocity-controls{
+    padding:16px;
+    background:linear-gradient(165deg,#15232d,#0b1218);
+    border:1px solid #294554;
+}
+
+.arw-velocity-controls label{
+    display:block;
+    margin-bottom:7px;
+    color:#77f6e8;
+    font-size:.77rem;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+}
+
+#arwVelocityStation{
+    width:100%;
+    margin-bottom:13px;
+    padding:11px;
+    color:#fff;
+    background:#091119;
+    border:1px solid #3a6878;
+    font:inherit;
+}
+
+.arw-radar-buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+    margin-bottom:15px;
+}
+
+.arw-radar-button{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:44px;
+    padding:8px;
+    color:#f4fbff;
+    background:#152633;
+    border:1px solid #3c7180;
+    text-decoration:none;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.arw-radar-button:hover{
+    color:#061013;
+    background:#48ead8;
+}
+
+.arw-velocity-key{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin:14px 0;
+}
+
+.arw-key{
+    padding:11px 7px;
+    text-align:center;
+    color:#fff;
+    font-size:.82rem;
+    font-weight:900;
+}
+
+.arw-key-toward{
+    background:linear-gradient(90deg,#063d15,#17d65c);
+}
+
+.arw-key-away{
+    background:linear-gradient(90deg,#6b1010,#ef3535);
+}
+
+.arw-safety-note{
+    margin-top:12px;
+    padding:11px;
+    color:#ffeab8;
+    background:rgba(255,174,0,.08);
+    border:1px solid rgba(255,174,0,.35);
+    font-size:.83rem;
+    line-height:1.45;
+}
+
+@media(max-width:1050px){
+    .arw-guide-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .arw-velocity-layout{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+    #arw-learning-center{
+        padding:16px;
+        margin-top:25px;
+    }
+
+    .arw-guide-grid{
+        grid-template-columns:1fr;
+    }
+
+    .arw-guide-image{
+        height:175px;
+    }
+
+    .arw-velocity-screen,
+    .arw-velocity-screen img{
+        min-height:300px;
+        height:300px;
+    }
+}
+</style>
+
+<section id="arw-learning-center">
+    <p class="arw-guide-kicker">American Recon Weather Unit Field Guide</p>
+    <h2 class="arw-guide-title">Learn to Read Weather Like a Forecaster</h2>
+    <p class="arw-guide-intro">
+        These illustrated guides explain what the colors, lines and patterns mean.
+        Radar interpretation supports situational awareness, but official National
+        Weather Service warnings must always guide protective action.
+    </p>
+
+    <div class="arw-guide-grid">
+
+        <article class="arw-guide-card">
+            <div class="arw-guide-image">
+                <svg viewBox="0 0 500 240" role="img" aria-label="Radar reflectivity illustration">
+                    <defs>
+                        <radialGradient id="rainCore">
+                            <stop offset="0" stop-color="#ff192e"/>
+                            <stop offset=".26" stop-color="#ffd334"/>
+                            <stop offset=".53" stop-color="#26e968"/>
+                            <stop offset="1" stop-color="#1670ff" stop-opacity=".15"/>
+                        </radialGradient>
+                    </defs>
+                    <rect width="500" height="240" fill="#07131c"/>
+                    <path d="M28 198 Q130 102 238 155 T476 107" fill="none" stroke="#284553" stroke-width="3"/>
+                    <circle cx="265" cy="117" r="90" fill="url(#rainCore)" opacity=".93"/>
+                    <circle cx="84" cy="188" r="8" fill="#46f0dc"/>
+                    <path d="M84 188 L235 130" stroke="#46f0dc" stroke-width="3" stroke-dasharray="8 7"/>
+                    <text x="18" y="27" fill="#71f6e9" font-size="18" font-weight="700">REFLECTIVITY / PRECIPITATION</text>
+                    <text x="310" y="207" fill="#d7e8ef" font-size="16">Blue/green: lighter</text>
+                    <text x="310" y="228" fill="#ffd43d" font-size="16">Yellow/red: stronger</text>
+                </svg>
+            </div>
+            <div class="arw-guide-body">
+                <span class="arw-guide-number">01 RADAR</span>
+                <h3>Radar Reflectivity</h3>
+                <p>Reflectivity estimates the amount of energy returned by rain, snow, hail or other objects.</p>
+                <div class="arw-read-rule">Read it: stronger colors normally mean stronger returns, not automatically a tornado.</div>
+            </div>
+        </article>
+
+        <article class="arw-guide-card">
+            <div class="arw-guide-image">
+                <svg viewBox="0 0 500 240" role="img" aria-label="Radar velocity illustration">
+                    <rect width="500" height="240" fill="#07131c"/>
+                    <circle cx="250" cy="125" r="91" fill="#0b1c26" stroke="#426575" stroke-width="2"/>
+                    <path d="M250 35 A90 90 0 0 0 250 215 Z" fill="#0ab64e" opacity=".82"/>
+                    <path d="M250 35 A90 90 0 0 1 250 215 Z" fill="#dc2636" opacity=".86"/>
+                    <circle cx="250" cy="125" r="8" fill="#fff"/>
+                    <path d="M157 125 H224" stroke="#fff" stroke-width="5"/>
+                    <path d="M207 112 L226 125 L207 138" fill="none" stroke="#fff" stroke-width="5"/>
+                    <path d="M276 125 H343" stroke="#fff" stroke-width="5"/>
+                    <path d="M326 112 L345 125 L326 138" fill="none" stroke="#fff" stroke-width="5"/>
+                    <text x="25" y="28" fill="#71f6e9" font-size="18" font-weight="700">DOPPLER VELOCITY</text>
+                    <text x="58" y="224" fill="#3af277" font-size="17" font-weight="700">TOWARD RADAR</text>
+                    <text x="313" y="224" fill="#ff5964" font-size="17" font-weight="700">AWAY</text>
+                </svg>
+            </div>
+            <div class="arw-guide-body">
+                <span class="arw-guide-number">02 RADAR</span>
+                <h3>Radar Velocity</h3>
+                <p>Velocity measures movement toward or away from one radar station. Green commonly represents inbound motion and red outbound motion.</p>
+                <div class="arw-read-rule">Read it: tightly packed opposite colors can suggest rotation, but trained interpretation is required.</div>
+            </div>
+        </article>
+
+        <article class="arw-guide-card">
+            <div class="arw-guide-image">
+                <svg viewBox="0 0 500 240" role="img" aria-label="Cloud formation illustration">
+                    <defs>
+                        <linearGradient id="sky" x2="0" y2="1">
+                            <stop stop-color="#11628b"/>
+                            <stop offset="1" stop-color="#8bd9ee"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="500" height="240" fill="url(#sky)"/>
+                    <rect y="190" width="500" height="50" fill="#356d39"/>
+                    <path d="M135 191 C135 145 165 137 184 146 C192 102 255 94 274 137 C320 113 361 145 352 181 C350 186 346 190 341 191Z" fill="#f2f7fa"/>
+                    <path d="M215 188 C202 168 201 147 215 128" fill="none" stroke="#ffcc43" stroke-width="7"/>
+                    <path d="M203 142 L216 124 L229 143" fill="none" stroke="#ffcc43" stroke-width="7"/>
+                    <path d="M80 204 C96 180 108 171 129 158" fill="none" stroke="#d9f7ff" stroke-width="5"/>
+                    <path d="M118 155 L138 154 L130 174" fill="none" stroke="#d9f7ff" stroke-width="5"/>
+                    <text x="21" y="29" fill="#fff" font-size="18" font-weight="700">WARM MOIST AIR RISES</text>
+                    <text x="299" y="81" fill="#fff" font-size="16">Cooling</text>
+                    <text x="299" y="104" fill="#fff" font-size="16">Condensation</text>
+                    <text x="299" y="127" fill="#fff" font-size="16">Cloud droplets</text>
+                </svg>
+            </div>
+            <div class="arw-guide-body">
+                <span class="arw-guide-number">03 ATMOSPHERE</span>
+                <h3>How Clouds Form</h3>
+                <p>Air rises, expands and cools. When it reaches saturation, water vapor condenses onto tiny particles and forms cloud droplets.</p>
+                <div class="arw-read-rule">Read it: growing vertical clouds can indicate increasing instability and stronger upward motion.</div>
+            </div>
+        </article>
+
+        <article class="arw-guide-card">
+            <div class="arw-guide-image">
+                <svg viewBox="0 0 500 240" role="img" aria-label="Visible and infrared satellite illustration">
+                    <rect width="500" height="240" fill="#07131c"/>
+                    <circle cx="130" cy="121" r="79" fill="#196ea0"/>
+                    <path d="M76 86 Q111 58 146 82 T192 113 Q155 126 135 111 T76 86" fill="#61aa65"/>
+                    <path d="M82 143 Q124 122 166 151 T189 181 Q145 199 110 174 T82 143" fill="#61aa65"/>
+                    <circle cx="358" cy="119" r="79" fill="#2a1750"/>
+                    <path d="M308 101 Q352 67 402 103 Q377 121 352 112 T308 101" fill="#fff"/>
+                    <path d="M302 150 Q345 115 413 151 Q380 176 340 163 T302 150" fill="#db62ff"/>
+                    <text x="57" y="224" fill="#f6fbff" font-size="17" font-weight="700">VISIBLE: REFLECTED LIGHT</text>
+                    <text x="274" y="224" fill="#f0c6ff" font-size="17" font-weight="700">INFRARED: TEMPERATURE</text>
+                </svg>
+            </div>
+            <div class="arw-guide-body">
+                <span class="arw-guide-number">04 SATELLITE</span>
+                <h3>Visible vs. Infrared</h3>
+                <p>Visible imagery uses reflected daylight. Infrared imagery measures cloud-top temperature and works during both day and night.</p>
+                <div class="arw-read-rule">Read it: very cold cloud tops can indicate high clouds and powerful thunderstorm updrafts.</div>
+            </div>
+        </article>
+
+        <article class="arw-guide-card">
+            <div class="arw-guide-image">
+                <svg viewBox="0 0 500 240" role="img" aria-label="Temperature and heat index illustration">
+                    <defs>
+                        <linearGradient id="heatScale">
+                            <stop stop-color="#2c8dff"/>
+                            <stop offset=".46" stop-color="#ffd32e"/>
+                            <stop offset="1" stop-color="#ec2b3f"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="500" height="240" fill="#07131c"/>
+                    <rect x="47" y="92" width="406" height="36" rx="18" fill="url(#heatScale)"/>
+                    <circle cx="215" cy="110" r="12" fill="#fff"/>
+                    <circle cx="380" cy="110" r="12" fill="#fff"/>
+                    <text x="45" y="65" fill="#74f0e5" font-size="18" font-weight="700">AIR TEMPERATURE</text>
+                    <text x="165" y="166" fill="#fff" font-size="18">90 F air temperature</text>
+                    <text x="165" y="194" fill="#ffb347" font-size="18">High humidity</text>
+                    <text x="165" y="222" fill="#ff5964" font-size="20" font-weight="700">Feels hotter</text>
+                </svg>
+            </div>
+            <div class="arw-guide-body">
+                <span class="arw-guide-number">05 TEMPERATURE</span>
+                <h3>Temperature vs. Heat Index</h3>
+                <p>Temperature measures the air. Heat index estimates how hot it feels when humidity reduces the body's ability to cool by sweating.</p>
+                <div class="arw-read-rule">Read it: heat index is not the measured air temperature; direct sun can make conditions feel hotter.</div>
+            </div>
+        </article>
+
+        <article class="arw-guide-card">
+            <div class="arw-guide-image">
+                <svg viewBox="0 0 500 240" role="img" aria-label="Warm and cold front illustration">
+                    <rect width="500" height="240" fill="#07131c"/>
+                    <path d="M40 77 C150 48 246 107 460 62" fill="none" stroke="#258eff" stroke-width="7"/>
+                    <g fill="#258eff">
+                        <path d="M95 66 l22 28 l22-36z"/>
+                        <path d="M210 75 l22 28 l22-36z"/>
+                        <path d="M338 70 l22 28 l22-36z"/>
+                    </g>
+                    <path d="M42 170 C173 122 284 194 460 145" fill="none" stroke="#ef3f50" stroke-width="7"/>
+                    <g fill="#ef3f50">
+                        <path d="M114 147 a21 21 0 0 1 42 0z"/>
+                        <path d="M245 160 a21 21 0 0 1 42 0z"/>
+                        <path d="M376 149 a21 21 0 0 1 42 0z"/>
+                    </g>
+                    <text x="21" y="28" fill="#71f6e9" font-size="18" font-weight="700">WEATHER MAP FRONTS</text>
+                    <text x="25" y="112" fill="#79bfff" font-size="16">Cold front: triangles point forward</text>
+                    <text x="25" y="215" fill="#ff7d87" font-size="16">Warm front: semicircles point forward</text>
+                </svg>
+            </div>
+            <div class="arw-guide-body">
+                <span class="arw-guide-number">06 WEATHER MAPS</span>
+                <h3>Fronts and Pressure</h3>
+                <p>Cold and warm fronts mark boundaries between air masses. Low pressure commonly supports rising air, clouds and unsettled weather.</p>
+                <div class="arw-read-rule">Read it: fronts show boundaries and movement, not an exact wall where weather instantly changes.</div>
+            </div>
+        </article>
+
+        <article class="arw-guide-card">
+            <div class="arw-guide-image">
+                <svg viewBox="0 0 500 240" role="img" aria-label="Tornado rotation signature illustration">
+                    <rect width="500" height="240" fill="#07131c"/>
+                    <circle cx="250" cy="126" r="90" fill="#12232d"/>
+                    <path d="M167 132 C180 61 244 48 253 121 C248 164 203 181 167 132Z" fill="#17cd57"/>
+                    <path d="M333 120 C318 190 253 199 247 126 C254 82 300 69 333 120Z" fill="#e83a48"/>
+                    <circle cx="250" cy="125" r="9" fill="#fff"/>
+                    <text x="22" y="28" fill="#71f6e9" font-size="18" font-weight="700">VELOCITY COUPLET</text>
+                    <text x="28" y="222" fill="#ffd061" font-size="16">Close inbound/outbound colors require careful analysis</text>
+                </svg>
+            </div>
+            <div class="arw-guide-body">
+                <span class="arw-guide-number">07 SEVERE WEATHER</span>
+                <h3>Possible Rotation Signature</h3>
+                <p>A velocity couplet is a tight area of winds moving toward and away from the radar next to each other.</p>
+                <div class="arw-read-rule">Read it: a couplet can support a warning decision but does not by itself prove that a tornado is on the ground.</div>
+            </div>
+        </article>
+
+        <article class="arw-guide-card">
+            <div class="arw-guide-image">
+                <svg viewBox="0 0 500 240" role="img" aria-label="Watch and warning illustration">
+                    <rect width="500" height="240" fill="#07131c"/>
+                    <rect x="28" y="55" width="206" height="132" rx="8" fill="#a27a00" stroke="#ffd129" stroke-width="3"/>
+                    <rect x="266" y="55" width="206" height="132" rx="8" fill="#8a1420" stroke="#ff5665" stroke-width="3"/>
+                    <text x="88" y="105" fill="#fff" font-size="28" font-weight="800">WATCH</text>
+                    <text x="48" y="139" fill="#fff" font-size="17">Conditions are favorable</text>
+                    <text x="80" y="165" fill="#fff" font-size="17">Be prepared</text>
+                    <text x="304" y="105" fill="#fff" font-size="28" font-weight="800">WARNING</text>
+                    <text x="285" y="139" fill="#fff" font-size="17">Danger is occurring</text>
+                    <text x="322" y="165" fill="#fff" font-size="17">Take action</text>
+                </svg>
+            </div>
+            <div class="arw-guide-body">
+
+               <span class="arw-guide-number">08 ALERTS</span>
+                <h3>Outlook, Watch and Warning</h3>
+                <p>An outlook highlights possible risk. A watch means hazardous weather is possible. A warning means danger is occurring or imminent.</p>
+                <div class="arw-read-rule">Read it: warning information and local instructions take priority over every map or social-media report.</div>
+            </div>
+        </article>
+
+        <article class="arw-guide-card">
+            <div class="arw-guide-image">
+                <svg viewBox="0 0 500 240" role="img" aria-label="Rainfall forecast illustration">
+                    <defs>
+                        <linearGradient id="rainScale">
+                            <stop stop-color="#b8ffd0"/>
+                            <stop offset=".33" stop-color="#24d36c"/>
+                            <stop offset=".65" stop-color="#ffd126"/>
+                            <stop offset="1" stop-color="#d828d8"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="500" height="240" fill="#07131c"/>
+                    <path d="M42 171 Q130 57 222 132 T456 93 L456 205 L42 205Z" fill="url(#rainScale)" opacity=".86"/>
+                    <path d="M42 171 Q130 57 222 132 T456 93" fill="none" stroke="#fff" stroke-width="3"/>
+                    <rect x="65" y="28" width="370" height="18" fill="url(#rainScale)"/>
+                    <text x="65" y="69" fill="#b8ffd0" font-size="15">Lower</text>
+                    <text x="371" y="69" fill="#ff83ff" font-size="15">Higher</text>
+                    <text x="21" y="228" fill="#eefaff" font-size="17">Forecast totals cover an area and time period</text>
+                </svg>
+            </div>
+
+            <div class="arw-guide-body">
+                <span class="arw-guide-number">09 FORECASTS</span>
+                <h3>Rainfall Forecast Maps</h3>
+                <p>Rainfall maps estimate total precipitation during a stated period. Colors represent forecast ranges shown by the product legend.</p>
+                <div class="arw-read-rule">Read it: always check whether a map covers 24 hours, several days or an excessive-rainfall probability.</div>
+            </div>
+        </article>
+    </div>
+
+    <section class="arw-velocity-center">
+        <div class="arw-velocity-heading">
+            <div>
+                <p class="arw-guide-kicker">Official NWS Live Product</p>
+                <h2>Velocity Radar Center</h2>
+                <p class="arw-guide-intro">
+                    Select a radar station to view its latest animated base-velocity loop.
+                    Velocity is station-based, so there is no single national velocity mosaic.
+                </p>
+            </div>
+
+            <span class="arw-live-badge">LIVE</span>
+        </div>
+
+        <div class="arw-velocity-layout">
+            <div class="arw-velocity-screen">
+                <img
+                    id="arwVelocityImage"
+                    src="https://radar.weather.gov/ridge/standard/base_velocity/KAMX_loop.gif"
+                    alt="Live NWS Miami base velocity radar loop"
+                >
+
+                <div class="arw-radar-label" id="arwVelocityLabel">
+                    Miami/South Florida - KAMX Base Velocity
+                </div>
+            </div>
+
+            <aside class="arw-velocity-controls">
+                <label for="arwVelocityStation">Select radar station</label>
+
+                <select id="arwVelocityStation">
+                    <optgroup label="Florida">
+                        <option value="KAMX|Miami / South Florida">Miami / South Florida</option>
+                        <option value="KMLB|Melbourne / Treasure Coast">Melbourne / Treasure Coast</option>
+                        <option value="KTBW|Tampa Bay">Tampa Bay</option>
+                        <option value="KJAX|Jacksonville">Jacksonville</option>
+                        <option value="KTLH|Tallahassee">Tallahassee</option>
+                        <option value="KEVX|Florida Panhandle / Eglin">Florida Panhandle / Eglin</option>
+                    </optgroup>
+
+                    <optgroup label="Southeast">
+                        <option value="KFFC|Atlanta">Atlanta</option>
+                        <option value="KCHS|Charleston">Charleston</option>
+                        <option value="KCAE|Columbia">Columbia</option>
+                        <option value="KMOB|Mobile">Mobile</option>
+                        <option value="KLIX|New Orleans">New Orleans</option>
+                    </optgroup>
+
+                    <optgroup label="Central United States">
+                        <option value="KTLX|Oklahoma City">Oklahoma City</option>
+                        <option value="KFWS|Dallas / Fort Worth">Dallas / Fort Worth</option>
+                        <option value="KHGX|Houston">Houston</option>
+                        <option value="KLOT|Chicago">Chicago</option>
+                        <option value="KICT|Wichita">Wichita</option>
+                    </optgroup>
+
+                    <optgroup label="Other Major Areas">
+                        <option value="KDIX|Philadelphia / New Jersey">Philadelphia / New Jersey</option>
+                        <option value="KOKX|New York City">New York City</option>
+                        <option value="KBOS|Boston">Boston</option>
+                        <option value="KSEW|Seattle">Seattle</option>
+                        <option value="KVTX|Los Angeles">Los Angeles</option>
+                    </optgroup>
+                </select>
+
+                <div class="arw-radar-buttons">
+                    <button class="arw-radar-button" id="arwRefreshVelocity" type="button">
+                        Refresh Loop
+                    </button>
+
+                    <a
+                        class="arw-radar-button"
+                        id="arwOfficialVelocity"
+                        href="https://radar.weather.gov/station/KAMX/standard"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        Official Radar
+                    </a>
+                </div>
+
+                <div class="arw-velocity-key">
+                    <div class="arw-key arw-key-toward">
+                        GREEN<br>Toward radar
+                    </div>
+
+                    <div class="arw-key arw-key-away">
+                        RED<br>Away from radar
+                    </div>
+                </div>
+
+                <p>
+                    The precise color scale can vary. Always read the legend included
+                    with the official radar product.
+                </p>
+
+                <div class="arw-safety-note">
+                    Velocity radar is an interpretation tool, not an automatic tornado
+                    detector. Follow official NWS warnings and local emergency instructions.
+                </div>
+            </aside>
+        </div>
+    </section>
+</section>
+
+<script id="arw-learning-center-script">
+(function () {
+    var newCenter = document.getElementById("arw-learning-center");
+
+    if (!newCenter) {
+        return;
+    }
+
+    var oldHeading = Array.from(
+        document.querySelectorAll("h1,h2,h3")
+    ).find(function (item) {
+        return item !== newCenter.querySelector(".arw-guide-title") &&
+            item.textContent.toLowerCase().indexOf(
+                "how forecasters read the atmosphere"
+            ) !== -1;
+    });
+
+    if (oldHeading) {
+        var oldSection = oldHeading.closest("section");
+
+        if (oldSection && oldSection !== newCenter) {
+            oldSection.style.display = "none";
+        }
+    }
+
+    var stationSelect =
+        document.getElementById("arwVelocityStation");
+
+    var radarImage =
+        document.getElementById("arwVelocityImage");
+
+    var radarLabel =
+        document.getElementById("arwVelocityLabel");
+
+    var officialLink =
+        document.getElementById("arwOfficialVelocity");
+
+    var refreshButton =
+        document.getElementById("arwRefreshVelocity");
+
+    function updateVelocityRadar() {
+        var parts = stationSelect.value.split("|");
+        var radarId = parts[0];
+        var radarName = parts[1];
+
+        radarLabel.textContent =
+            radarName + " - " + radarId + " Base Velocity";
+
+        radarImage.alt =
+            "Live NWS " + radarName + " base velocity radar loop";
+
+        radarImage.src =
+            "https://radar.weather.gov/ridge/standard/base_velocity/" +
+            radarId +
+            "_loop.gif?refresh=" +
+            Date.now();
+
+        officialLink.href =
+            "https://radar.weather.gov/station/" +
+            radarId +
+            "/standard";
+    }
+
+    stationSelect.addEventListener(
+        "change",
+        updateVelocityRadar
+    );
+
+    refreshButton.addEventListener(
+        "click",
+        updateVelocityRadar
+    );
+
+    radarImage.addEventListener("error", function () {
+        radarLabel.textContent =
+            "This radar station is temporarily unavailable. " +
+            "Select another station or use Official Radar.";
+    });
+
+    window.setInterval(
+        updateVelocityRadar,
+        300000
+    );
+})();
+</script>
+<!-- ARW LEARNING CENTER END -->
+<!-- ARW THREAT LOCATIONS START -->
+<style id="arw-threat-location-styles">
+#arwThreatLocations{
+    width:100%;
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px solid rgba(87,221,229,.30);
+}
+
+.arw-location-heading{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:12px;
+}
+
+.arw-location-heading h3{
+    margin:0 0 4px;
+    color:#ffffff;
+    font-size:1.15rem;
+}
+
+.arw-location-heading p{
+    margin:0;
+    color:#aec1cc;
+    font-size:.85rem;
+    line-height:1.4;
+}
+
+#arwAlertUpdateStatus{
+    flex:0 0 auto;
+    color:#4df3df;
+    font-size:.75rem;
+    font-weight:800;
+}
+
+.arw-location-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+}
+
+.arw-location-category{
+    overflow:hidden;
+    background:#0a141c;
+    border:1px solid rgba(83,184,204,.35);
+}
+
+.arw-location-category summary{
+    position:relative;
+    padding:13px 36px 13px 13px;
+    color:#f6fbff;
+    background:#12222d;
+    cursor:pointer;
+    list-style:none;
+    font-weight:850;
+}
+
+.arw-location-category summary::-webkit-details-marker{
+    display:none;
+}
+
+.arw-location-category summary::after{
+    content:"+";
+    position:absolute;
+    top:10px;
+    right:13px;
+    color:#4df3df;
+    font-size:1.3rem;
+    font-weight:900;
+}
+
+.arw-location-category[open] summary::after{
+    content:"-";
+}
+
+.arw-location-category[open] summary{
+    border-bottom:1px solid rgba(83,184,204,.35);
+}
+
+.arw-location-count{
+    display:inline-block;
+    margin-left:6px;
+    padding:3px 7px;
+    color:#06100e;
+    background:#4df3df;
+    border-radius:10px;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.arw-location-count.zero{
+    color:#b9c8d0;
+    background:#263640;
+}
+
+.arw-alert-list{
+    max-height:310px;
+    margin:0;
+    padding:8px;
+    overflow:auto;
+    list-style:none;
+}
+
+.arw-alert-list li{
+    margin:0 0 8px;
+    padding:10px;
+    color:#c7d4db;
+    background:#101c25;
+    border-left:3px solid #39ddca;
+    font-size:.82rem;
+    line-height:1.4;
+}
+
+.arw-alert-list li:last-child{
+    margin-bottom:0;
+}
+
+.arw-alert-list strong{
+    display:block;
+    margin-bottom:4px;
+    color:#ffffff;
+}
+
+.arw-alert-list a{
+    display:inline-block;
+    margin-top:6px;
+    color:#5ef4e2;
+    font-weight:800;
+    text-decoration:none;
+}
+
+.arw-alert-list a:hover{
+    text-decoration:underline;
+}
+
+.arw-no-alerts{
+    color:#7affac !important;
+    border-left-color:#43e77c !important;
+}
+
+.arw-alert-error{
+    color:#ffd47a !important;
+    border-left-color:#ffbc35 !important;
+}
+
+#arwVelocityTopMount{
+    width:100%;
+    max-width:1600px;
+    margin:20px auto 32px;
+}
+
+#arwVelocityTopMount .arw-velocity-center{
+    margin:0;
+    box-sizing:border-box;
+}
+
+#arwVelocityTopMount .arw-velocity-center *{
+    box-sizing:border-box;
+}
+
+@media(max-width:900px){
+    .arw-location-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+}
+
+@media(max-width:580px){
+    .arw-location-grid{
+        grid-template-columns:1fr;
+    }
+
+    .arw-location-heading{
+        display:block;
+    }
+
+    #arwAlertUpdateStatus{
+        display:block;
+        margin-top:7px;
+    }
+}
+</style>
+
+<script id="arw-threat-location-script">
+(function () {
+    "use strict";
+
+    var categories = [
+        {
+            key:"tornado",
+            name:"Tornado",
+            test:function (eventName) {
+                return eventName.indexOf("tornado") !== -1;
+            }
+        },
+        {
+            key:"severe",
+            name:"Severe Storm",
+            test:function (eventName) {
+                return eventName.indexOf("severe thunderstorm") !== -1;
+            }
+        },
+        {
+            key:"flooding",
+            name:"Flooding",
+            test:function (eventName) {
+                return eventName.indexOf("flood") !== -1;
+            }
+        },
+        {
+            key:"tropical",
+            name:"Tropical",
+            test:function (eventName) {
+                return eventName.indexOf("hurricane") !== -1 ||
+                       eventName.indexOf("tropical storm") !== -1 ||
+                       eventName.indexOf("storm surge") !== -1;
+            }
+        },
+        {
+            key:"winter",
+            name:"Winter",
+            test:function (eventName) {
+                return eventName.indexOf("winter") !== -1 ||
+                       eventName.indexOf("snow") !== -1 ||
+                       eventName.indexOf("ice") !== -1 ||
+                       eventName.indexOf("blizzard") !== -1 ||
+                       eventName.indexOf("freeze") !== -1 ||
+                       eventName.indexOf("frost") !== -1 ||
+                       eventName.indexOf("wind chill") !== -1;
+            }
+        },
+        {
+            key:"heat",
+            name:"Extreme Heat",
+            test:function (eventName) {
+                return eventName.indexOf("heat") !== -1;
+            }
+        }
+    ];
+
+    function findThreatBoard() {
+        var headings = Array.from(
+            document.querySelectorAll("h1,h2,h3,h4")
+        );
+
+        var title = headings.find(function (heading) {
+            return heading.textContent
+                .toLowerCase()
+                .indexOf("arw national threat board") !== -1;
+        });
+
+        if (!title) {
+            return null;
+        }
+
+        return title.closest("section") ||
+               title.closest("article") ||
+               title.parentElement;
+    }
+
+    function createLocationBoard(threatBoard) {
+        var oldBoard = document.getElementById("arwThreatLocations");
+
+        if (oldBoard) {
+            oldBoard.remove();
+        }
+
+        var board = document.createElement("div");
+        board.id = "arwThreatLocations";
+
+        board.innerHTML =
+            '<div class="arw-location-heading">' +
+                '<div>' +
+                    '<h3>Active Alert Locations</h3>' +
+                    '<p>Open a category to see the counties, cities, zones and regions included in current official NWS alerts.</p>' +
+                '</div>' +
+                '<span id="arwAlertUpdateStatus">Loading locations...</span>' +
+            '</div>' +
+            '<div class="arw-location-grid" id="arwLocationGrid"></div>';
+
+        threatBoard.appendChild(board);
+
+        var grid = document.getElementById("arwLocationGrid");
+
+        categories.forEach(function (category) {
+            var details = document.createElement("details");
+            details.className = "arw-location-category";
+            details.id = "arwCategory-" + category.key;
+
+            details.innerHTML =
+                '<summary>' +
+                    category.name +
+                    '<span class="arw-location-count zero" ' +
+                    'id="arwCount-' + category.key + '">0</span>' +
+                '</summary>' +
+                '<ul class="arw-alert-list" ' +
+                    'id="arwList-' + category.key + '">' +
+                    '<li>Loading official alerts...</li>' +
+                '</ul>';
+
+            grid.appendChild(details);
+        });
+    }
+
+    function moveVelocityCenter(threatBoard) {
+        var velocityCenter =
+            document.querySelector(".arw-velocity-center");
+
+        if (!velocityCenter || !threatBoard) {
+            return;
+        }
+
+        var oldMount =
+            document.getElementById("arwVelocityTopMount");
+
+        if (oldMount) {
+            oldMount.remove();
+        }
+
+        var mount = document.createElement("div");
+        mount.id = "arwVelocityTopMount";
+
+        var insertionTarget =
+            threatBoard.closest("section") || threatBoard;
+
+        insertionTarget.insertAdjacentElement("afterend", mount);
+        mount.appendChild(velocityCenter);
+    }
+
+    function escapeText(value) {
+        return String(value || "")
+            .replace(/&/g,"&amp;")
+            .replace(/</g,"&lt;")
+            .replace(/>/g,"&gt;")
+            .replace(/"/g,"&quot;")
+            .replace(/'/g,"&#039;");
+    }
+
+    function formatDate(dateValue) {
+        if (!dateValue) {
+            return "Time not provided";
+        }
+
+        var date = new Date(dateValue);
+
+        if (isNaN(date.getTime())) {
+            return "Time not provided";
+        }
+
+        return date.toLocaleString("en-US", {
+            month:"short",
+            day:"numeric",
+            hour:"numeric",
+            minute:"2-digit",
+            timeZoneName:"short"
+        });
+    }
+
+    function showEmptyCategory(category) {
+        var list =
+            document.getElementById("arwList-" + category.key);
+
+        var count =
+            document.getElementById("arwCount-" + category.key);
+
+        count.textContent = "0";
+        count.classList.add("zero");
+
+        list.innerHTML =
+            '<li class="arw-no-alerts">' +
+                'No matching active alerts were found.' +
+            '</li>';
+    }
+
+    function displayCategory(category, alerts) {
+        var list =
+            document.getElementById("arwList-" + category.key);
+
+        var count =
+            document.getElementById("arwCount-" + category.key);
+
+        count.textContent = alerts.length;
+        count.classList.toggle("zero", alerts.length === 0);
+
+        if (alerts.length === 0) {
+            showEmptyCategory(category);
+            return;
+        }
+
+        alerts.sort(function (first, second) {
+            var firstArea =
+                first.properties.areaDesc || "";
+
+            var secondArea =
+                second.properties.areaDesc || "";
+
+            return firstArea.localeCompare(secondArea);
+        });
+
+        list.innerHTML = alerts.map(function (feature) {
+            var properties = feature.properties || {};
+
+            var eventName =
+                properties.event || "Weather Alert";
+
+            var area =
+                properties.areaDesc ||
+                "Affected location was not provided";
+
+            var severity =
+                properties.severity || "Unknown severity";
+
+            var sender =
+                properties.senderName ||
+                "National Weather Service";
+
+            var effective =
+                formatDate(properties.effective || properties.sent);
+
+            var officialUrl =
+                properties["@id"] ||
+                feature.id ||
+                "https://alerts.weather.gov/";
+
+            return (
+                "<li>" +
+                    "<strong>" + escapeText(eventName) + "</strong>" +
+                    "<b>Affected area:</b> " + escapeText(area) + "<br>" +
+                    "<b>Severity:</b> " + escapeText(severity) + "<br>" +
+                    "<b>Issued by:</b> " + escapeText(sender) + "<br>" +
+                    "<b>Effective:</b> " + escapeText(effective) + "<br>" +
+                    '<a href="' + escapeText(officialUrl) + '"' +
+                    ' target="_blank" rel="noopener">' +
+                    "Open Official Alert</a>" +
+                "</li>"
+            );
+        }).join("");
+    }
+
+    async function loadThreatLocations() {
+        var status =
+            document.getElementById("arwAlertUpdateStatus");
+
+        if (!status) {
+            return;
+        }
+
+        status.textContent = "Updating locations...";
+
+        try {
+            var response = await fetch(
+                "https://api.weather.gov/alerts/active?status=actual&message_type=alert",
+                {
+                    headers:{
+                        "Accept":"application/geo+json"
+                    },
+                    cache:"no-store"
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("NWS response " + response.status);
+            }
+
+            var data = await response.json();
+            var features = Array.isArray(data.features) ?
+                data.features :
+                [];
+
+            categories.forEach(function (category) {
+                var matches = features.filter(function (feature) {
+                    var properties = feature.properties || {};
+                    var eventName =
+                        String(properties.event || "").toLowerCase();
+
+                    return category.test(eventName);
+                });
+
+                displayCategory(category, matches);
+            });
+
+            status.textContent =
+                "Updated " +
+                new Date().toLocaleTimeString("en-US", {
+                    hour:"numeric",
+                    minute:"2-digit"
+                });
+        }
+        catch (error) {
+            status.textContent = "Official locations temporarily unavailable";
+
+            categories.forEach(function (category) {
+                var list =
+                    document.getElementById("arwList-" + category.key);
+
+                if (list) {
+                    list.innerHTML =
+                        '<li class="arw-alert-error">' +
+                        'The official NWS alert service did not respond. ' +
+                        'Use the official alert source and try Refresh Feeds again.' +
+                        '</li>';
+                }
+            });
+        }
+    }
+
+    function installThreatUpgrade() {
+        var threatBoard = findThreatBoard();
+
+        if (!threatBoard) {
+            window.setTimeout(installThreatUpgrade,1000);
+            return;
+        }
+
+        createLocationBoard(threatBoard);
+        moveVelocityCenter(threatBoard);
+        loadThreatLocations();
+
+        window.setInterval(loadThreatLocations,300000);
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener(
+            "DOMContentLoaded",
+            installThreatUpgrade
+        );
+    }
+    else {
+        installThreatUpgrade();
+    }
+})();
+</script>
+<!-- ARW THREAT LOCATIONS END -->
 </body>
 </html>
