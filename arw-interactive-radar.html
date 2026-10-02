@@ -23,6 +23,17 @@ button:disabled{opacity:.45}
 #status{padding:0 12px 14px;line-height:1.5}
 a{color:#82dfed}
 </style>
+
+<style id="arw-aligned-radar">
+header{
+ position:absolute;top:10px;left:52px;right:10px;
+ z-index:800;padding:8px 10px;
+ background:rgba(3,15,23,.88);pointer-events:none
+}
+header h3{font-size:16px}
+header p{display:none}
+#map{height:430px}
+</style>
 </head>
 <body>
 <header>
@@ -34,8 +45,6 @@ Drag, zoom, or play the recent loop. Coverage gaps do not mean clear weather.</p
 <div id="map" aria-label="Interactive U.S. NEXRAD radar"></div>
 
 <div class="controls">
-<button id="us">United States</button>
-<button id="fl">Florida</button>
 <button id="play" disabled>Play</button>
 <button id="refresh">Refresh</button>
 <label>Speed
@@ -183,8 +192,6 @@ $("refresh").onclick=()=>{
  show(11);
 };
 
-$("us").onclick=()=>map.fitBounds([[24,-125],[50,-66]]);
-$("fl").onclick=()=>map.setView([28,-82],6);
 
 document.addEventListener("visibilitychange",()=>{
  if(document.hidden){

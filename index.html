@@ -531,6 +531,46 @@ dialog::backdrop{
  }
 }
 </style>
+
+<style id="arw-matched-map-controls">
+.arw-velocity-layout{
+ grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+ align-items:start
+}
+.arw-global-radar-panel,.arw-original-velocity{min-width:0}
+#arw-global-radar-frame{
+ display:block;width:100%;height:650px!important;
+ border:1px solid #31566a
+}
+.arw-original-velocity .arw-velocity-screen{
+ height:430px!important;min-height:430px!important;
+ position:relative
+}
+#arwVelocityPanMap{
+ position:absolute;inset:0;height:430px;
+ background:#02070a;z-index:1
+}
+.arw-velocity-screen .leaflet-image-layer{
+ object-fit:fill;background:transparent
+}
+.arw-original-velocity .arw-radar-label{
+ z-index:800;top:auto;bottom:12px;
+ pointer-events:none
+}
+.arw-original-velocity .arw-velocity-controls{
+ margin-top:12px
+}
+.arw-velocity-reset{
+ padding:8px 10px;border:1px solid #457488;
+ background:#123b4d;color:white;
+ border-radius:5px;cursor:pointer
+}
+@media(max-width:900px){
+ .arw-velocity-layout{
+  grid-template-columns:minmax(0,1fr)!important
+ }
+}
+</style>
 </head>
 
 <body>
@@ -1943,7 +1983,7 @@ setInterval(refreshFeeds,300000);
         <div class="arw-velocity-layout">
 <div class="arw-global-radar-panel">
 <iframe id="arw-global-radar-frame"
- src="arw-interactive-radar.html?v=nexrad1"
+ src="arw-interactive-radar.html?v=controls2"
  title="ARW U.S. and World Interactive Radar"></iframe>
 </div>
 <div class="arw-original-velocity">
@@ -2661,3 +2701,5 @@ setInterval(refreshFeeds,300000);
 <!-- ARW THREAT LOCATIONS END -->
 </body>
 </html>
+
+<script src="arw-velocity-interaction.js?v=2"></script>
