@@ -3,265 +3,207 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ARW U.S. Interactive Radar</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<title>ARW U.S. NEXRAD Radar</title>
+<link rel="stylesheet"
+ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#07151e;color:#edf7ff;font:14px system-ui}
-.head{padding:14px}
-h3{margin:0;color:#61edd7}
-p{line-height:1.4}
-#map{height:430px;background:#182a35}
-.tools{padding:10px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
-button,select{
- background:#133647;color:white;border:1px solid #457488;
- border-radius:5px;padding:9px;cursor:pointer
+header{padding:14px}
+h3{margin:0;color:#61edd7;font-size:21px}
+p{line-height:1.4;margin:8px 0}
+#map{height:430px;background:#172c37}
+.controls{padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,select,a.button{
+ background:#123b4d;color:white;border:1px solid #4c8194;
+ padding:10px;border-radius:6px;cursor:pointer;text-decoration:none
 }
-button:disabled,input:disabled{opacity:.45}
+button:disabled{opacity:.45}
 #timeline{width:100%;accent-color:#61edd7}
-#status{padding:0 12px 12px;line-height:1.4}
-a{color:#83dafa}
+#status{padding:0 12px 14px;line-height:1.5}
+a{color:#82dfed}
 </style>
 </head>
 <body>
-<div class="head">
-<h3>U.S. Live Precipitation Radar</h3>
-<p>Drag to move. Use + / - to zoom. Recent precipitation radar where available.
-Coverage gaps do not mean clear weather.</p>
-</div>
+<header>
+<h3>ARW U.S. NEXRAD Radar</h3>
+<p>Interactive reflectivity radar for the contiguous United States.
+Drag, zoom, or play the recent loop. Coverage gaps do not mean clear weather.</p>
+</header>
 
-<div id="map" aria-label="Interactive radar map"></div>
+<div id="map" aria-label="Interactive U.S. NEXRAD radar"></div>
 
-<div class="tools">
+<div class="controls">
 <button id="us">United States</button>
-<button id="world">Florida</button>
+<button id="fl">Florida</button>
 <button id="play" disabled>Play</button>
 <button id="refresh">Refresh</button>
-
 <label>Speed
 <select id="speed">
-<option value="1200">Slow</option>
-<option value="800" selected>Normal</option>
-<option value="450">Fast</option>
+<option value="1400">Slow</option>
+<option value="900" selected>Normal</option>
+<option value="500">Fast</option>
 </select>
 </label>
-
-<label><input type="checkbox" id="coverage">Show coverage gaps</label>
-
-<input id="timeline" aria-label="Radar timeline"
- type="range" min="0" max="0" value="0" disabled>
+<a class="button" href="https://radar.weather.gov/"
+ target="_blank" rel="noopener">Official NWS Radar</a>
+<input id="timeline" type="range" min="0" max="11" value="11"
+ aria-label="Radar timeline: oldest to latest">
 </div>
 
-<div id="status" role="status">Loading radar...</div>
+<div id="status" role="status">Loading U.S. NEXRAD radar...</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function(){
 "use strict";
+const $=id=>document.getElementById(id);
 
-const el = id => document.getElementById(id);
-const status = el("status");
-
-if (!window.L) {
- status.textContent = "Map library unavailable. Check internet and reload.";
+if(!window.L){
+ $("status").textContent="Map library unavailable. Reload the page.";
  return;
 }
 
-const map = L.map("map", {
- minZoom:2,
- maxZoom:12,
- worldCopyJump:true
-}).setView([38,-97],4);
+const map=L.map("map",{
+ minZoom:3,maxZoom:12,scrollWheelZoom:true
+});
+map.fitBounds([[24,-125],[50,-66]]);
 
-L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{
  maxZoom:19,
  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
 map.attributionControl.addAttribution(
- 'Weather data by <a href="https://www.rainviewer.com">RainViewer</a>'
+ 'NEXRAD mosaic: <a href="https://mesonet.agron.iastate.edu/docs/nexrad_mosaic/" target="_blank" rel="noopener">Iowa State IEM</a>'
 );
 
-let frames = [];
-let host = "";
-let index = 0;
-let current = null;
-let mask = null;
-let playing = false;
-let timer = null;
-let busy = false;
-let refreshing = false;
+let radar=null;
+let busy=false;
+let playing=false;
+let timer=null;
+let index=11;
+let epoch=Date.now();
+const ages=[55,50,45,40,35,30,25,20,15,10,5,0];
 
-function stop() {
- playing = false;
+function pause(){
+ playing=false;
  clearTimeout(timer);
- el("play").textContent = "Play";
+ $("play").textContent="Play";
 }
 
-function schedule() {
+function schedule(){
  clearTimeout(timer);
- if (playing && !document.hidden) {
-  timer = setTimeout(
-   () => show((index + 1) % frames.length),
-   Number(el("speed").value)
+ if(playing&&!busy&&!document.hidden){
+  timer=setTimeout(
+   ()=>show((index+1)%ages.length),
+   Number($("speed").value)
   );
  }
 }
 
-function show(i) {
- if (busy || !frames.length) return;
- busy = true;
+function show(i){
+ if(busy)return;
+ busy=true;
 
- const frame = frames[i];
- let errors = 0;
- let done = false;
+ const age=ages[i];
+ const name="nexrad-n0q"+
+  (age?"-m"+String(age).padStart(2,"0")+"m":"");
 
- const next = L.tileLayer(
-  host + frame.path + "/256/{z}/{x}/{y}/2/1_1.png",
-  {opacity:0,maxNativeZoom:7,maxZoom:12,zIndex:20}
+ let errors=0;
+ let done=false;
+
+ const layer=L.tileLayer(
+  "https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/"+
+  name+"/{z}/{x}/{y}.png?v="+Math.floor(epoch/300000),
+  {
+   opacity:0,zIndex:10,maxNativeZoom:9,maxZoom:12,
+   bounds:[[23,-126],[51,-65]]
+  }
  );
 
- const timeout = setTimeout(() => finish(false),15000);
+ const timeout=setTimeout(()=>finish(false),20000);
 
- function finish(ok) {
-  if (done) return;
-  done = true;
+ function finish(ok){
+  if(done)return;
+  done=true;
   clearTimeout(timeout);
-  busy = false;
+  busy=false;
 
-  if (!ok || errors) {
-   map.removeLayer(next);
-   stop();
-   status.textContent =
-    "Radar tiles unavailable. Previous frame retained; press Refresh.";
+  if(!ok||errors){
+   map.removeLayer(layer);
+   pause();
+   $("status").textContent=
+    "Radar tiles unavailable. Previous image retained; "+
+    "use Refresh or Official NWS Radar.";
    return;
   }
 
-  next.setOpacity(.72);
-  if (current) map.removeLayer(current);
-  current = next;
-  index = i;
-  el("timeline").value = i;
+  layer.setOpacity(.8);
+  if(radar)map.removeLayer(radar);
+  radar=layer;
+  index=i;
+  $("timeline").value=i;
 
-  const age = Math.max(
-   0,Math.round((Date.now()/1000 - frame.time)/60)
-  );
+  $("status").textContent=
+   "NEXRAD "+
+   (age?age+" minutes before the latest mosaic":"latest mosaic")+
+   " | Loaded "+new Date().toLocaleTimeString()+
+   ". Observation times vary; refreshes every 5 minutes.";
 
-  status.textContent =
-   "Frame generated: " +
-   new Date(frame.time*1000).toLocaleString() +
-   " | " + age + " min ago" +
-   (age > 30 ? " | Older frame." : "") +
-   " | Observations may be older. Zoom above level 7 enlarges radar pixels.";
-
+  $("play").disabled=false;
   schedule();
  }
 
- next.on("tileerror",() => errors++);
- next.once("load",() => finish(true));
- next.addTo(map);
+ layer.on("tileerror",()=>errors++);
+ layer.once("load",()=>finish(true));
+ layer.addTo(map);
 }
 
-async function refresh() {
- if (refreshing || busy) return;
- refreshing = true;
- el("refresh").disabled = true;
- stop();
- status.textContent = "Checking radar feed...";
-
- try {
-  const response = await fetch(
-   "https://api.rainviewer.com/public/weather-maps.json",
-   {cache:"no-store",signal:AbortSignal.timeout(15000)}
-  );
-
-  if (!response.ok) throw Error("Feed unavailable");
-  const data = await response.json();
-
-  const available = (data.radar?.past || [])
-   .filter(frame =>
-    Number.isFinite(frame.time) &&
-    /^\/v2\/radar\/[A-Za-z0-9_-]+$/.test(frame.path)
-   )
-   .sort((a,b) => a.time-b.time);
-
-  if (
-   !available.length ||
-   data.host !== "https://tilecache.rainviewer.com"
-  ) throw Error("Unexpected feed");
-
-  frames = available;
-  host = data.host;
-
-  el("timeline").max = frames.length-1;
-  el("timeline").disabled = false;
-  el("play").disabled = false;
-
-  if (mask) map.removeLayer(mask);
-
-  mask = L.tileLayer(
-   host + "/v2/coverage/0/256/{z}/{x}/{y}/0/0_0.png",
-   {maxNativeZoom:7,maxZoom:12,opacity:.45,zIndex:30}
-  );
-
-  if (el("coverage").checked) mask.addTo(map);
-
-  show(frames.length-1);
- } catch (error) {
-  status.textContent =
-   "Radar feed unavailable. " +
-   (current
-    ? "Previous frame retained; it may be old."
-    : "No current radar displayed.") +
-   " Press Refresh.";
- } finally {
-  refreshing = false;
-  el("refresh").disabled = false;
- }
-}
-
-el("us").onclick = () => map.setView([38,-97],4);
-el("world").onclick = () => map.setView([28,-82],6);
-el("refresh").onclick = refresh;
-
-el("play").onclick = () => {
- if (playing) {
-  stop();
- } else {
-  playing = true;
-  el("play").textContent = "Pause";
+$("play").onclick=()=>{
+ if(playing){
+  pause();
+ }else{
+  playing=true;
+  $("play").textContent="Pause";
   schedule();
  }
 };
 
-el("timeline").oninput = () => {
- stop();
- show(Number(el("timeline").value));
+$("timeline").oninput=()=>{
+ pause();
+ show(Number($("timeline").value));
 };
 
-el("speed").onchange = schedule;
+$("speed").onchange=schedule;
 
-el("coverage").onchange = () => {
- if (!mask) return;
- if (el("coverage").checked) {
-  mask.addTo(map);
- } else {
-  map.removeLayer(mask);
+$("refresh").onclick=()=>{
+ pause();
+ epoch=Date.now();
+ show(11);
+};
+
+$("us").onclick=()=>map.fitBounds([[24,-125],[50,-66]]);
+$("fl").onclick=()=>map.setView([28,-82],6);
+
+document.addEventListener("visibilitychange",()=>{
+ if(document.hidden){
+  pause();
+ }else{
+  epoch=Date.now();
+  show(11);
  }
-};
-
-document.addEventListener("visibilitychange",() => {
- if (document.hidden) stop();
- else refresh();
 });
 
-setInterval(() => {
- if (!document.hidden && !playing && !busy) refresh();
+setInterval(()=>{
+ if(!document.hidden&&!busy&&!playing){
+  epoch=Date.now();
+  show(11);
+ }
 },300000);
 
-window.addEventListener("resize",() => map.invalidateSize());
-
-refresh();
+window.addEventListener("resize",()=>map.invalidateSize());
+show(11);
 })();
 </script>
 </body>
