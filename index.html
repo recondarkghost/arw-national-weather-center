@@ -513,6 +513,24 @@ dialog::backdrop{
   .threat-board{grid-template-columns:repeat(2,1fr)}
 }
 </style>
+
+<style id="arw-global-radar-style">
+.arw-velocity-layout{
+ grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+ align-items:start
+}
+.arw-global-radar-panel,.arw-original-velocity{min-width:0}
+#arw-global-radar-frame{
+ display:block;width:100%;height:760px;
+ border:1px solid #31566a;background:#07151e
+}
+.arw-original-velocity .arw-velocity-controls{margin-top:12px}
+@media(max-width:900px){
+ .arw-velocity-layout{
+  grid-template-columns:minmax(0,1fr)!important
+ }
+}
+</style>
 </head>
 
 <body>
@@ -1923,6 +1941,13 @@ setInterval(refreshFeeds,300000);
         </div>
 
         <div class="arw-velocity-layout">
+<div class="arw-global-radar-panel">
+<iframe id="arw-global-radar-frame"
+ src="arw-interactive-radar.html"
+ title="ARW U.S. and World Interactive Radar"></iframe>
+</div>
+<div class="arw-original-velocity">
+
             <div class="arw-velocity-screen">
                 <img
                     id="arwVelocityImage"
@@ -2009,6 +2034,7 @@ setInterval(refreshFeeds,300000);
                     detector. Follow official NWS warnings and local emergency instructions.
                 </div>
             </aside>
+</div>
         </div>
     </section>
 </section>
