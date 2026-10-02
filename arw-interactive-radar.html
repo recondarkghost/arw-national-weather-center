@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ARW Interactive Radar</title>
+<title>ARW U.S. Interactive Radar</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 *{box-sizing:border-box}
@@ -25,7 +25,7 @@ a{color:#83dafa}
 </head>
 <body>
 <div class="head">
-<h3>U.S. &amp; World Radar</h3>
+<h3>U.S. Live Precipitation Radar</h3>
 <p>Drag to move. Use + / - to zoom. Recent precipitation radar where available.
 Coverage gaps do not mean clear weather.</p>
 </div>
@@ -34,7 +34,7 @@ Coverage gaps do not mean clear weather.</p>
 
 <div class="tools">
 <button id="us">United States</button>
-<button id="world">World</button>
+<button id="world">Florida</button>
 <button id="play" disabled>Play</button>
 <button id="refresh">Refresh</button>
 
@@ -181,7 +181,7 @@ async function refresh() {
   const available = (data.radar?.past || [])
    .filter(frame =>
     Number.isFinite(frame.time) &&
-    /^\/v2\/radar\/[0-9]+$/.test(frame.path)
+    /^\/v2\/radar\/[A-Za-z0-9_-]+$/.test(frame.path)
    )
    .sort((a,b) => a.time-b.time);
 
@@ -221,7 +221,7 @@ async function refresh() {
 }
 
 el("us").onclick = () => map.setView([38,-97],4);
-el("world").onclick = () => map.setView([20,0],2);
+el("world").onclick = () => map.setView([28,-82],6);
 el("refresh").onclick = refresh;
 
 el("play").onclick = () => {
