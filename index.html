@@ -3021,6 +3021,120 @@ header {
 })();
 </script>
 
+
+<style id="arw-ai-storm-style">
+.arw-header-tools {
+  display:flex;align-items:center;gap:16px;
+}
+.arw-header-tools .status {margin:0}
+#arw-ai-button {
+  margin:0;max-width:285px;padding:12px 16px;
+  background:linear-gradient(135deg,#163747,#10252e);
+  border:1px solid #75efd3;border-radius:16px;
+  box-shadow:0 0 22px #62e9d51a;
+  text-align:left;transition:background .2s,box-shadow .2s;
+}
+#arw-ai-button:hover {
+  background:#204653;box-shadow:0 0 24px #62e9d540;
+}
+#arw-ai-button:focus-visible {
+  outline:3px solid #ffffff;outline-offset:4px;
+}
+#arw-ai-button svg {
+  width:76px;height:70px;flex-shrink:0;overflow:visible;
+}
+.arw-ai-label strong {
+  display:block;font-size:16px;color:#edfff9;
+}
+.arw-ai-label small {
+  display:block;font-size:12px;line-height:1.4;
+  font-weight:400;color:#bce8e1;margin-top:4px;
+}
+.arw-storm-cloud {animation:arw-cloud 4s ease-in-out infinite}
+.arw-storm-rain {
+  animation:arw-rain 1.5s linear infinite;
+  stroke:#6edcff;stroke-width:3;stroke-linecap:round;
+}
+.arw-storm-rain.delay {animation-delay:.5s}
+.arw-storm-bolt {animation:arw-bolt 4s ease-in-out infinite}
+.arw-storm-wind {animation:arw-wind 3s ease-in-out infinite}
+@keyframes arw-cloud {
+  50% {transform:translateY(-3px)}
+}
+@keyframes arw-rain {
+  0% {transform:translate(2px,-3px);opacity:0}
+  30% {opacity:1}
+  100% {transform:translate(-3px,7px);opacity:0}
+}
+@keyframes arw-bolt {
+  0%,65%,100% {opacity:.55}
+  70%,78% {opacity:1}
+  74% {opacity:.35}
+}
+@keyframes arw-wind {
+  50% {transform:translateX(4px);opacity:.5}
+}
+@media(max-width:1100px) {
+  header {grid-template-columns:auto 1fr!important}
+  .arw-header-tools {
+    grid-column:1/-1;justify-content:flex-end;flex-wrap:wrap;
+  }
+}
+@media(max-width:600px) {
+  .arw-header-tools {justify-content:center;gap:10px}
+  #arw-ai-button {padding:8px 10px}
+  #arw-ai-button svg {width:56px;height:54px}
+  .arw-ai-label strong {font-size:14px}
+}
+@media(prefers-reduced-motion:reduce) {
+  #arw-ai-button svg * {animation:none!important}
+}
+</style>
+<script>
+(() => {
+  const button = document.getElementById("arw-ai-button");
+  const header = document.querySelector("header");
+  const status = header && header.querySelector(".status");
+  if (!button || !status) return;
+
+  const tools = document.createElement("div");
+  tools.className = "arw-header-tools";
+  status.before(tools);
+  tools.append(button, status);
+
+  button.setAttribute("aria-label",
+    "ARW Weather AI. Ask me anything about the weather.");
+  button.innerHTML = `
+    <svg viewBox="0 0 90 80" aria-hidden="true">
+      <g class="arw-storm-cloud">
+        <path d="M22 42h44a12 12 0 0 0 0-24
+          18 18 0 0 0-34-5 15 15 0 0 0-10 29Z"
+          fill="#e5f6ff" stroke="#87d8ed" stroke-width="2"/>
+        <path d="M29 29q5-7 11-3M53 26q6-4 10 1"
+          fill="none" stroke="#658baf" stroke-width="2"
+          stroke-linecap="round"/>
+      </g>
+      <path class="arw-storm-bolt"
+        d="M45 38 35 57h10l-6 18 22-26H49l7-11Z"
+        fill="#ffe16a" stroke="#ffc743" stroke-width="1"/>
+      <g class="arw-storm-rain">
+        <path d="m25 49-4 8m44-7-4 8"/>
+      </g>
+      <g class="arw-storm-rain delay">
+        <path d="m29 62-4 8m47-6-4 8"/>
+      </g>
+      <g class="arw-storm-wind" fill="none"
+        stroke="#a3eee3" stroke-width="2" stroke-linecap="round">
+        <path d="M4 43h10q7 0 7-5M5 49h11M68 60h10q8 0 8-6"/>
+      </g>
+    </svg>
+    <span class="arw-ai-label">
+      <strong>ARW Weather AI</strong>
+      <small>Ask me anything about the weather</small>
+    </span>`;
+})();
+</script>
+
 </body>
 </html>
 
