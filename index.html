@@ -571,6 +571,93 @@ dialog::backdrop{
  }
 }
 </style>
+
+<style id="arw-classroom-styles">
+#arw-classroom {
+  border:1px solid #37606a;
+  border-radius:14px;
+  overflow:hidden;
+  background:#101c26;
+  color:#e5eff5;
+}
+#arw-classroom summary {
+  cursor:pointer;
+  list-style:none;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+#arw-classroom summary::-webkit-details-marker { display:none; }
+#arw-classroom summary::after {
+  content:"+";
+  margin-left:auto;
+  font-size:26px;
+  color:#70f2df;
+}
+#arw-classroom details[open]>summary::after,
+#arw-classroom[open]>.arw-class-main::after { content:"−"; }
+#arw-classroom summary:focus-visible {
+  outline:3px solid #70f2df;
+  outline-offset:-4px;
+}
+.arw-class-main {
+  padding:22px;
+  background:linear-gradient(120deg,#173844,#12212e);
+}
+.arw-class-main strong {
+  display:block;
+  font-size:clamp(1.2rem,3vw,1.7rem);
+  color:#fff;
+}
+.arw-class-main small {
+  display:block;
+  margin-top:6px;
+  color:#b9d7df;
+}
+.arw-class-icon { font-size:32px; }
+.arw-class-inside { padding:18px; }
+.arw-class-welcome,.arw-class-footer {
+  line-height:1.65;
+  color:#c1d3de;
+}
+.arw-class-lessons { display:grid; gap:10px; }
+.arw-class-lesson {
+  border:1px solid #304c5b;
+  border-radius:10px;
+  overflow:hidden;
+  background:#142430;
+}
+.arw-class-lesson>summary {
+  padding:15px;
+  font-weight:700;
+}
+.arw-class-number {
+  padding:7px 9px;
+  border-radius:8px;
+  background:#244956;
+  color:#7af7e6;
+}
+.arw-class-content {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  align-items:center;
+  border-top:1px solid #304c5b;
+}
+#arw-classroom .arw-guide-image { height:auto; }
+#arw-classroom .arw-guide-image svg {
+  display:block;
+  width:100%;
+  height:auto;
+}
+#arw-classroom .arw-guide-body { padding:20px; }
+.arw-class-footer { margin-bottom:0; font-size:.9rem; }
+@media(max-width:650px) {
+  .arw-class-content { grid-template-columns:1fr; }
+  .arw-class-main { padding:16px; }
+  .arw-class-inside { padding:12px; }
+}
+</style>
+
 </head>
 
 <body>
@@ -1719,18 +1806,30 @@ setInterval(refreshFeeds,300000);
 }
 </style>
 
+
 <section id="arw-learning-center">
-    <p class="arw-guide-kicker">American Recon Weather Unit Field Guide</p>
-    <h2 class="arw-guide-title">Learn to Read Weather Like a Forecaster</h2>
-    <p class="arw-guide-intro">
-        These illustrated guides explain what the colors, lines and patterns mean.
-        Radar interpretation supports situational awareness, but official National
-        Weather Service warnings must always guide protective action.
-    </p>
+  <details id="arw-classroom">
+    <summary class="arw-class-main">
+      <span class="arw-class-icon" aria-hidden="true">&#128218;</span>
+      <span>
+        <strong>ARW Weather Classroom</strong>
+        <small>9 illustrated lessons • Tap to explore</small>
+      </span>
+    </summary>
+    <div class="arw-class-inside">
+      <p class="arw-class-welcome">
+        Welcome, weather explorer! Choose a lesson to discover
+        what radar colors, cloud patterns and forecast maps mean.
+        The pictures are teaching illustrations, not live observations.
+      </p>
+      <div class="arw-class-lessons">
 
-    <div class="arw-guide-grid">
-
-        <article class="arw-guide-card">
+    <details class="arw-class-lesson">
+      <summary>
+        <span class="arw-class-number">01</span>
+        <span>Radar Reflectivity</span>
+      </summary>
+      <div class="arw-class-content">
             <div class="arw-guide-image">
                 <svg viewBox="0 0 500 240" role="img" aria-label="Radar reflectivity illustration">
                     <defs>
@@ -1753,13 +1852,19 @@ setInterval(refreshFeeds,300000);
             </div>
             <div class="arw-guide-body">
                 <span class="arw-guide-number">01 RADAR</span>
-                <h3>Radar Reflectivity</h3>
+                
                 <p>Reflectivity estimates the amount of energy returned by rain, snow, hail or other objects.</p>
                 <div class="arw-read-rule">Read it: stronger colors normally mean stronger returns, not automatically a tornado.</div>
             </div>
-        </article>
-
-        <article class="arw-guide-card">
+        </div>
+    </details>
+    
+    <details class="arw-class-lesson">
+      <summary>
+        <span class="arw-class-number">02</span>
+        <span>Radar Velocity</span>
+      </summary>
+      <div class="arw-class-content">
             <div class="arw-guide-image">
                 <svg viewBox="0 0 500 240" role="img" aria-label="Radar velocity illustration">
                     <rect width="500" height="240" fill="#07131c"/>
@@ -1778,13 +1883,19 @@ setInterval(refreshFeeds,300000);
             </div>
             <div class="arw-guide-body">
                 <span class="arw-guide-number">02 RADAR</span>
-                <h3>Radar Velocity</h3>
+                
                 <p>Velocity measures movement toward or away from one radar station. Green commonly represents inbound motion and red outbound motion.</p>
                 <div class="arw-read-rule">Read it: tightly packed opposite colors can suggest rotation, but trained interpretation is required.</div>
             </div>
-        </article>
-
-        <article class="arw-guide-card">
+        </div>
+    </details>
+    
+    <details class="arw-class-lesson">
+      <summary>
+        <span class="arw-class-number">03</span>
+        <span>How Clouds Form</span>
+      </summary>
+      <div class="arw-class-content">
             <div class="arw-guide-image">
                 <svg viewBox="0 0 500 240" role="img" aria-label="Cloud formation illustration">
                     <defs>
@@ -1808,13 +1919,19 @@ setInterval(refreshFeeds,300000);
             </div>
             <div class="arw-guide-body">
                 <span class="arw-guide-number">03 ATMOSPHERE</span>
-                <h3>How Clouds Form</h3>
+                
                 <p>Air rises, expands and cools. When it reaches saturation, water vapor condenses onto tiny particles and forms cloud droplets.</p>
                 <div class="arw-read-rule">Read it: growing vertical clouds can indicate increasing instability and stronger upward motion.</div>
             </div>
-        </article>
-
-        <article class="arw-guide-card">
+        </div>
+    </details>
+    
+    <details class="arw-class-lesson">
+      <summary>
+        <span class="arw-class-number">04</span>
+        <span>Visible vs. Infrared</span>
+      </summary>
+      <div class="arw-class-content">
             <div class="arw-guide-image">
                 <svg viewBox="0 0 500 240" role="img" aria-label="Visible and infrared satellite illustration">
                     <rect width="500" height="240" fill="#07131c"/>
@@ -1830,13 +1947,19 @@ setInterval(refreshFeeds,300000);
             </div>
             <div class="arw-guide-body">
                 <span class="arw-guide-number">04 SATELLITE</span>
-                <h3>Visible vs. Infrared</h3>
+                
                 <p>Visible imagery uses reflected daylight. Infrared imagery measures cloud-top temperature and works during both day and night.</p>
                 <div class="arw-read-rule">Read it: very cold cloud tops can indicate high clouds and powerful thunderstorm updrafts.</div>
             </div>
-        </article>
-
-        <article class="arw-guide-card">
+        </div>
+    </details>
+    
+    <details class="arw-class-lesson">
+      <summary>
+        <span class="arw-class-number">05</span>
+        <span>Temperature vs. Heat Index</span>
+      </summary>
+      <div class="arw-class-content">
             <div class="arw-guide-image">
                 <svg viewBox="0 0 500 240" role="img" aria-label="Temperature and heat index illustration">
                     <defs>
@@ -1858,13 +1981,19 @@ setInterval(refreshFeeds,300000);
             </div>
             <div class="arw-guide-body">
                 <span class="arw-guide-number">05 TEMPERATURE</span>
-                <h3>Temperature vs. Heat Index</h3>
+                
                 <p>Temperature measures the air. Heat index estimates how hot it feels when humidity reduces the body's ability to cool by sweating.</p>
                 <div class="arw-read-rule">Read it: heat index is not the measured air temperature; direct sun can make conditions feel hotter.</div>
             </div>
-        </article>
-
-        <article class="arw-guide-card">
+        </div>
+    </details>
+    
+    <details class="arw-class-lesson">
+      <summary>
+        <span class="arw-class-number">06</span>
+        <span>Fronts and Pressure</span>
+      </summary>
+      <div class="arw-class-content">
             <div class="arw-guide-image">
                 <svg viewBox="0 0 500 240" role="img" aria-label="Warm and cold front illustration">
                     <rect width="500" height="240" fill="#07131c"/>
@@ -1887,13 +2016,19 @@ setInterval(refreshFeeds,300000);
             </div>
             <div class="arw-guide-body">
                 <span class="arw-guide-number">06 WEATHER MAPS</span>
-                <h3>Fronts and Pressure</h3>
+                
                 <p>Cold and warm fronts mark boundaries between air masses. Low pressure commonly supports rising air, clouds and unsettled weather.</p>
                 <div class="arw-read-rule">Read it: fronts show boundaries and movement, not an exact wall where weather instantly changes.</div>
             </div>
-        </article>
-
-        <article class="arw-guide-card">
+        </div>
+    </details>
+    
+    <details class="arw-class-lesson">
+      <summary>
+        <span class="arw-class-number">07</span>
+        <span>Possible Rotation Signature</span>
+      </summary>
+      <div class="arw-class-content">
             <div class="arw-guide-image">
                 <svg viewBox="0 0 500 240" role="img" aria-label="Tornado rotation signature illustration">
                     <rect width="500" height="240" fill="#07131c"/>
@@ -1907,13 +2042,19 @@ setInterval(refreshFeeds,300000);
             </div>
             <div class="arw-guide-body">
                 <span class="arw-guide-number">07 SEVERE WEATHER</span>
-                <h3>Possible Rotation Signature</h3>
+                
                 <p>A velocity couplet is a tight area of winds moving toward and away from the radar next to each other.</p>
                 <div class="arw-read-rule">Read it: a couplet can support a warning decision but does not by itself prove that a tornado is on the ground.</div>
             </div>
-        </article>
-
-        <article class="arw-guide-card">
+        </div>
+    </details>
+    
+    <details class="arw-class-lesson">
+      <summary>
+        <span class="arw-class-number">08</span>
+        <span>Outlook, Watch and Warning</span>
+      </summary>
+      <div class="arw-class-content">
             <div class="arw-guide-image">
                 <svg viewBox="0 0 500 240" role="img" aria-label="Watch and warning illustration">
                     <rect width="500" height="240" fill="#07131c"/>
@@ -1930,13 +2071,19 @@ setInterval(refreshFeeds,300000);
             <div class="arw-guide-body">
 
                <span class="arw-guide-number">08 ALERTS</span>
-                <h3>Outlook, Watch and Warning</h3>
+                
                 <p>An outlook highlights possible risk. A watch means hazardous weather is possible. A warning means danger is occurring or imminent.</p>
                 <div class="arw-read-rule">Read it: warning information and local instructions take priority over every map or social-media report.</div>
             </div>
-        </article>
-
-        <article class="arw-guide-card">
+        </div>
+    </details>
+    
+    <details class="arw-class-lesson">
+      <summary>
+        <span class="arw-class-number">09</span>
+        <span>Rainfall Forecast Maps</span>
+      </summary>
+      <div class="arw-class-content">
             <div class="arw-guide-image">
                 <svg viewBox="0 0 500 240" role="img" aria-label="Rainfall forecast illustration">
                     <defs>
@@ -1959,14 +2106,22 @@ setInterval(refreshFeeds,300000);
 
             <div class="arw-guide-body">
                 <span class="arw-guide-number">09 FORECASTS</span>
-                <h3>Rainfall Forecast Maps</h3>
+                
                 <p>Rainfall maps estimate total precipitation during a stated period. Colors represent forecast ranges shown by the product legend.</p>
                 <div class="arw-read-rule">Read it: always check whether a map covers 24 hours, several days or an excessive-rainfall probability.</div>
             </div>
-        </article>
+        </div>
+    </details>
+    
+      </div>
+      <p class="arw-class-footer">
+        Practice with the live maps above. Check the product,
+        legend and scan time before interpreting a pattern.
+        Follow official NWS warnings for protective action.
+      </p>
     </div>
-
-    <section class="arw-velocity-center">
+  </details>
+<section class="arw-velocity-center">
         <div class="arw-velocity-heading">
             <div>
                 <p class="arw-guide-kicker">Official NWS Live Product</p>
