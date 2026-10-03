@@ -2854,6 +2854,173 @@ setInterval(refreshFeeds,300000);
 })();
 </script>
 <!-- ARW THREAT LOCATIONS END -->
+
+<style>
+header {
+  position:sticky!important;
+  top:0;
+  z-index:1000;
+}
+#arw-ai-button {
+  display:flex;align-items:center;gap:10px;
+  margin-top:10px;padding:10px 14px;
+  border:1px solid #76f5d1;border-radius:12px;
+  background:#142e35;color:#eafff8;
+  font:inherit;font-weight:700;cursor:pointer;
+}
+#arw-ai-button:hover {background:#20434a}
+#arw-ai-button svg {width:30px;height:30px}
+#arw-ai-panel {
+  width:min(480px,calc(100vw - 24px));
+  max-height:85dvh;padding:0;border:1px solid #76f5d1;
+  border-radius:18px;background:#13212b;color:#f3f8fc;
+  box-shadow:0 20px 80px #0009;
+}
+#arw-ai-panel::backdrop {background:#0008}
+#arw-ai-panel * {box-sizing:border-box}
+.arw-ai-top {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px;border-bottom:1px solid #ffffff26;
+}
+.arw-ai-top strong {color:#86f5d4}
+#arw-ai-close {
+  background:transparent;border:0;color:white;
+  font-size:26px;cursor:pointer;padding:4px 10px;
+}
+.arw-ai-note {padding:12px 18px;font-size:13px;color:#bdcdd8}
+#arw-ai-messages {
+  height: min(350px,40dvh);overflow:auto;padding:0 18px 16px;
+}
+.arw-ai-message {
+  padding:12px;margin:10px 0;border-radius:12px;
+  background:#203340;white-space:pre-wrap;line-height:1.5;
+  overflow-wrap:anywhere;
+}
+.arw-ai-message.user {background:#245046}
+.arw-ai-message b {display:block;margin-bottom:5px;color:#86f5d4}
+#arw-ai-form {padding:16px;border-top:1px solid #ffffff26}
+#arw-ai-question {
+  width:100%;padding:12px;border-radius:10px;
+  border:1px solid #66808c;background:#0c1820;color:white;
+  font:inherit;resize:vertical;min-height:80px;
+}
+#arw-ai-send {
+  margin-top:10px;padding:11px 20px;border:0;border-radius:10px;
+  background:#86f5d4;color:#102820;font:inherit;
+  font-weight:700;cursor:pointer;
+}
+#arw-ai-send:disabled {opacity:.6;cursor:wait}
+#arw-ai-status {display:block;margin-top:8px;font-size:13px}
+</style>
+
+<dialog id="arw-ai-panel" aria-labelledby="arw-ai-title">
+  <div class="arw-ai-top">
+    <strong id="arw-ai-title">ARW Weather AI</strong>
+    <button id="arw-ai-close" aria-label="Close weather chat">×</button>
+  </div>
+  <div class="arw-ai-note">
+    Weather education assistant. Ask about radar, clouds, storms,
+    and weather terminology. Live forecasts and alerts are not connected.
+    AI answers can contain mistakes.
+  </div>
+  <div id="arw-ai-messages" role="log" aria-live="polite"></div>
+  <form id="arw-ai-form">
+    <label for="arw-ai-question">Your weather question</label>
+    <textarea id="arw-ai-question" maxlength="1200"
+      placeholder="How do thunderstorms form?" required></textarea>
+    <button id="arw-ai-send" type="submit">Ask ARW</button>
+    <span id="arw-ai-status" role="status"></span>
+  </form>
+</dialog>
+
+<script>
+(() => {
+  const header = document.querySelector("header");
+  const location = header.querySelector(".status") || header;
+  const button = document.createElement("button");
+  button.id = "arw-ai-button";
+  button.type = "button";
+  button.setAttribute("aria-haspopup", "dialog");
+  button.innerHTML = `<svg viewBox="0 0 32 32" fill="none"
+    aria-hidden="true"><path d="M8 25h16a6 6 0 0 0 0-12
+    9 9 0 0 0-17-2A7 7 0 0 0 8 25Z"
+    stroke="currentColor" stroke-width="2"/></svg>
+    <span>ARW Weather AI</span>`;
+  location.appendChild(button);
+
+  const panel = document.getElementById("arw-ai-panel");
+  const input = document.getElementById("arw-ai-question");
+  const messages = document.getElementById("arw-ai-messages");
+  const send = document.getElementById("arw-ai-send");
+  const status = document.getElementById("arw-ai-status");
+  const history = [];
+  let busy = false;
+
+  function add(role, content) {
+    const item = document.createElement("div");
+    item.className = "arw-ai-message " + role;
+    const label = document.createElement("b");
+    label.textContent = role === "user" ? "You" : "ARW Weather AI";
+    item.append(label, document.createTextNode(content));
+    messages.appendChild(item);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  button.onclick = () => {
+    if (!panel.open) panel.showModal();
+    input.focus();
+  };
+  document.getElementById("arw-ai-close").onclick = () => panel.close();
+
+  add("assistant", "Welcome to ARW Weather AI. What would you like to learn about weather?");
+
+  document.getElementById("arw-ai-form").onsubmit = async event => {
+    event.preventDefault();
+    const question = input.value.trim();
+    if (!question || busy) return;
+    busy = true;
+    send.disabled = true;
+    status.textContent = "Preparing your answer…";
+    add("user", question);
+    input.value = "";
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 45000);
+    try {
+      const response = await fetch(
+        "https://arw-weather-ai.recondarkghost.workers.dev/chat",
+        {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({question, history: history.slice(-6)}),
+          signal: controller.signal
+        }
+      );
+      const data = await response.json();
+      if (!response.ok || typeof data.answer !== "string") {
+        throw new Error(data.error || "The assistant could not answer. Please try again.");
+      }
+      add("assistant", data.answer);
+      history.push(
+        {role: "user", content: question},
+        {role: "assistant", content: data.answer}
+      );
+      if (history.length > 6) history.splice(0, history.length - 6);
+      status.textContent = "";
+    } catch (error) {
+      status.textContent = error.name === "AbortError"
+        ? "The request took too long. Please try again."
+        : error.message;
+      input.value = question;
+    } finally {
+      clearTimeout(timeout);
+      busy = false;
+      send.disabled = false;
+    }
+  };
+})();
+</script>
+
 </body>
 </html>
 
